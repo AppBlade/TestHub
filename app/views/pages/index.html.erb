@@ -19,7 +19,7 @@
   <div class="large-12 columns">
     <% if current_device %>
       <%= current_device.product %>
-      <%= current_device.version %>
+      <%= Ios::Version.new current_device.version %>
       <%= current_device.udid %>
     <% else %>
       <%= link_to t('global.device.registration'), devices_path(:format => 'mobileconfig'), :method => :post %>
