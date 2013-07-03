@@ -1,14 +1,38 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>TestHub</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+<!--[if lt IE 7 ]> <html class="ie6" lang="<%= I18n.locale %>"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie7" lang="<%= I18n.locale %>"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie8" lang="<%= I18n.locale %>"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="<%= I18n.locale %>"> <!--<![endif]-->
+  <head>
+  	<meta charset="utf-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= content_for?(:title) ? yield(:title) : t('global.app.slogan') %> | <%= t('global.app.name') %></title>
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "vendor/custom.modernizr" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div class="contain-to-grid">
+      <nav class="top-bar">
+        <ul class="title-area">
+          <li class="name">
+            <h1><a href="/"><%= t 'global.app.name' %></a></h1>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span><%= t 'global.navigation.menu' %></span></a></li>
+        </ul>
+        <section class="top-bar-section">
+          <ul class="right">
+            <li class="divider"></li>
+            <li><a href="/">1</a></li>
+            <li class="divider"></li>
+            <li class="has-form">
+              <a href="/" class="button">2</a>
+            </li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+    <%= yield %>
+    <%= javascript_include_tag "application" %>
+  </body>
 </html>
