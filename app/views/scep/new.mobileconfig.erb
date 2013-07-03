@@ -2,7 +2,7 @@
   <% {
     PayloadContent: [{
       PayloadContent: {
-        Challenge: @device.secret,
+        Challenge: [@device.id, @device.secret].join(':'),
         Keysize: 1024,
         Subject: [
           [['CN', t('devices.scep.cn')]]

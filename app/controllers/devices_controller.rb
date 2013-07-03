@@ -17,11 +17,9 @@ class DevicesController < ApplicationController
         
         key = OpenSSL::PKey::RSA.new 1024
 
-        new_serial = Random.rand(2**(159))
-
         cert = OpenSSL::X509::Certificate.new
         cert.version = 2
-        cert.serial = new_serial
+        cert.serial = Random.rand(2**(159))
         cert.not_before = Time.now
         cert.not_after = Time.now + 10.minutes
         cert.public_key = key.public_key

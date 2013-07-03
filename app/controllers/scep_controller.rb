@@ -43,16 +43,17 @@ class ScepController < ApplicationController
         sender_serial       = message.certificates.first.serial
         sender_common_name  = message.certificates.first.subject.to_a.select{|(k,v)| k == 'CN'}.first[1]
         recipient_key       = message.certificates.first.public_key
-
+        
         message_envelope = OpenSSL::PKCS7.new(message.data)
         x509_request = OpenSSL::X509::Request.new message_envelope.decrypt(SCEPKey, SCEPCert, nil)
-
+        
         challenge_password = x509_request.attributes.select{|a| a.oid == 'challengePassword' }.first
         challenge_password = challenge_password && challenge_password.value.value.first.value
+        device_id, challenge_password = challenge_password.split(':')
 
-        device = Device.where('secret_digest is not null and udid is not null').select{|d| d.secret == challenge_password }.first
+        device = Device.find(device_id)
 
-        if device && x509_request.verify(x509_request.public_key)
+        if device && (device.secret == challenge_password) && x509_request.verify(x509_request.public_key)
 
           new_serial = Random.rand(2**(159))
 
