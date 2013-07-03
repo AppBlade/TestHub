@@ -1,5 +1,17 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
+  
   protect_from_forgery with: :exception
+
+  helper_method :current_device
+
+private
+
+  def current_device
+    @current_device ||= Device.where(:certificate_serial => ssl_client_serial).first if ssl_client_serial
+  end
+
+  def ssl_client_serial
+    request.headers['HTTP_SSL_CLIENT_SERIAL']
+  end
+
 end

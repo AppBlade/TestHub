@@ -11,9 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20130703023555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "devices", force: true do |t|
+    t.string   "udid",               limit: 40
+    t.string   "product"
+    t.string   "version"
+    t.string   "secret_digest"
+    t.string   "certificate_serial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

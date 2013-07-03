@@ -1,0 +1,15 @@
+<%= {
+  PayloadContent: {
+    URL: device_url(@device),
+    DeviceAttributes: %w(UDID VERSION PRODUCT),
+    Challenge: @device.secret
+  },
+  PayloadOrganization: t('devices.new.organization'),
+  PayloadDisplayName: t('devices.new.display_name'),
+  PayloadVersion: 1,
+  PayloadUUID: SecureRandom.uuid,
+  PayloadIdentifier: 'com.testhub.registration',
+  PayloadDescription: t('devices.new.description'),
+  PayloadType: 'Profile Service'
+  }.to_plist.html_safe
+%>

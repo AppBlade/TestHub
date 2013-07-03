@@ -26,3 +26,10 @@ en:
       slogan: Give your mobile applications wings
     navigation:
       menu: Menu
+    device:
+      registration: Register this device to enable downloads.
+  devices:
+    new:
+      organization: TestHub
+      display_name: TestHub Registration
+      description: TestHub uses this profile to establish the identify of this device.
