@@ -6,10 +6,12 @@
 
 # Ignore bundler config.
 /.bundle
+.DS_Store
 
 # Ignore the secret directory
 /config/initializers/secret_token.rb
 /config/database.yml
+/lib/ssl/*
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

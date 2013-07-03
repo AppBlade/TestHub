@@ -29,6 +29,8 @@ en:
     device:
       registration: Register this device to enable downloads.
   devices:
+    scep:
+      cn: TestHub Registration
     new:
       organization: TestHub
       display_name: TestHub Registration

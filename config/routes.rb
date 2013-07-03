@@ -4,6 +4,8 @@ TestHub::Application.routes.draw do
     post '' => :update, on: :member, as: ''
   end
 
+  match 'scep' => 'scep#index', via: [:get, :post]
+
   root :to => 'pages#index'
 
 end

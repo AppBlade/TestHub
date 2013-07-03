@@ -1,0 +1,23 @@
+<%= sign_contents do %>
+  <% {
+    PayloadContent: [{
+      PayloadContent: {
+        Challenge: @device.secret,
+        Subject: [
+          [['CN', t('devices.scep.cn')]]
+        ],
+        URL: scep_url
+      },
+      PayloadVersion: 1,
+      PayloadUUID: SecureRandom.uuid,
+      PayloadIdentifier: 'com.testhub.registration.phase-3.scep',
+      PayloadType: 'com.apple.security.scep'
+    }],
+    PayloadDisplayName: t('devices.new.display_name'),
+    PayloadOrganization: t('devices.new.organization'),
+    PayloadVersion: 1,
+    PayloadUUID: SecureRandom.uuid,
+    PayloadIdentifier: 'com.testhub.registration.phase-3',
+    PayloadType: 'Configuration'
+  }.to_plist.html_safe -%>
+<% end -%>
