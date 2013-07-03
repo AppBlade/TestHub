@@ -17,16 +17,17 @@ class DevicesController < ApplicationController
         
         key = OpenSSL::PKey::RSA.new 1024
 
+        new_serial = Random.rand(2**(159))
+
         cert = OpenSSL::X509::Certificate.new
         cert.version = 2
-        cert.serial = 1
+        cert.serial = new_serial
         cert.not_before = Time.now
         cert.not_after = Time.now + 10.minutes
-
         cert.public_key = key.public_key
         cert.subject = OpenSSL::X509::Name.parse "CN=Device Registration Phase 2"
-        cert.issuer = cert.subject
-        cert.sign key, OpenSSL::Digest::SHA1.new
+        cert.issuer = ProfileServiceCert.subject
+        cert.sign ProfileServiceKey, OpenSSL::Digest::SHA1.new
 
         @password = SecureRandom.hex 32
         @uuid = SecureRandom.uuid

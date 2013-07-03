@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
 private
 
   def current_device
-    @current_device ||= Device.where(:certificate_serial => ssl_client_serial).first if ssl_client_serial
+    @current_device ||= Device.where(:certificate_serial => ssl_client_serial.downcase).first if ssl_client_serial
   end
 
   def ssl_client_serial
-    request.headers['HTTP_SSL_CLIENT_SERIAL']
+    @ssl_client_serial ||= request.headers['HTTP_SSL_CLIENT_SERIAL']
   end
 
 end
