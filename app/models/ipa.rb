@@ -36,7 +36,7 @@ class Ipa
       provisioning_plist_data = CFPropertyList::List.new(:data => mobile_provision.data).value
 
       @expiration_date = provisioning_plist_data.value['ExpirationDate'].value
-      @enterprise      = provisioning_plist_data.value['ProvisionsAllDevices'].try(:value)
+      @enterprise      = !!provisioning_plist_data.value['ProvisionsAllDevices'].try(:value)
       @devices         = Array(provisioning_plist_data.value['ProvisionedDevices'].try(:value)).map(&:value)
 
     end
