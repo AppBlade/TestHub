@@ -12,6 +12,7 @@ class IpaTest < ActiveSupport::TestCase
     assert_equal ipa.bundle_version, '1.1'
     assert       !ipa.ipad_only
     assert_equal ipa.icon_files, %w(icon.png Icon-72.png)
+    assert_equal ipa.errors, []
   end
 
   test 'Test IPA' do
@@ -24,6 +25,22 @@ class IpaTest < ActiveSupport::TestCase
     assert_equal ipa.bundle_version, '1.0'
     assert       !ipa.ipad_only
     assert_equal ipa.icon_files, %w(Icon.png)
+    assert_equal ipa.errors, []
+  end
+
+  test 'No payload' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/noPayload.ipa')
+    assert_equal ipa.errors, ['"/Payload" does not exist']
+  end
+
+  test 'No packages' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/noPackages.ipa')
+    assert_equal ipa.errors, ['"/Payload" does not contain a package']
+  end
+
+  test 'Two packages' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/twoPackages.ipa')
+    assert_equal ipa.errors, ['"/Payload" contains multiple packages']
   end
 
 end

@@ -8,19 +8,19 @@ class Ipa
     @zipfile = Zip::ZipFile.open(ipa_path)
 
     unless @zipfile.dir.entries('/').include?('Payload')
-      @errors << '"/Payload" does not exist'
+      @errors << I18n.t('ipa.errors.no_payload')
       return false
     end
 
     zip_entries = @zipfile.dir.entries('/Payload').reject {|e| e =~ /^\./ }
     case zip_entries.count
     when 0
-      @errors << '"/Payload" does not contain a package'
+      @errors << I18n.t('ipa.errors.no_package')
       return false
     when 1
 		  @package_name = zip_entries.first
     else
-      @errors << 'multiple payloads found'
+      @errors << I18n.t('ipa.errors.multiple_packages')
       return false
     end
 
@@ -36,7 +36,7 @@ class Ipa
 
     end
 
-    @errors << 'has not been code-signed' unless @zipfile.file.exists?(path('_CodeSignature/CodeResources'))
+    @errors << I18n.t('ipa.errors.no_codesign') unless @zipfile.file.exists?(path('_CodeSignature/CodeResources'))
 
     if @zipfile.file.exists?(path('Info.plist'))
 
@@ -55,7 +55,7 @@ class Ipa
 
     else
 
-      @errors << 'is missing Info.plist'
+      @errors << I18n.t('ipa.errors.missing_info_plist')
 
     end
 
