@@ -34,7 +34,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'rubyzip'
+gem 'rubyzip', :require => 'zip/zipfilesystem'
 gem 'CFPropertyList', :require => 'cfpropertylist'
 
 # Use ActiveModel has_secure_password
