@@ -4,7 +4,9 @@ TestHub::Application.routes.draw do
     post '' => :update, on: :member, as: ''
   end
 
-  match 'scep' => 'scep#index', via: [:get, :post]
+  get  'scep' => 'scep#get_ca_caps', constraints: -> (request) { request.params['operation'] == 'GetCACaps' }
+  get  'scep' => 'scep#get_ca_cert', constraints: -> (request) { request.params['operation'] == 'GetCACert' }
+  post 'scep' => 'scep#pki_operation'
 
   root :to => 'pages#index'
 
