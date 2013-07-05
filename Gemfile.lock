@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    CFPropertyList (2.2.0)
     actionmailer (4.0.0)
       actionpack (= 4.0.0)
       mail (~> 2.5.3)
@@ -84,6 +85,7 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    rubyzip (0.9.9)
     sass (3.2.9)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -121,6 +123,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  CFPropertyList
   bcrypt-ruby (~> 3.0.0)
   coffee-rails (~> 4.0.0)
   compass-rails
@@ -129,6 +132,7 @@ DEPENDENCIES
   pg
   plist
   rails (= 4.0.0)
+  rubyzip
   sass-rails (~> 4.0.0)
   sdoc
   turbolinks

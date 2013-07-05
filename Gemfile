@@ -35,6 +35,8 @@ group :doc do
 end
 
 gem 'plist'
+gem 'rubyzip'
+gem 'CFPropertyList', :require => 'cfpropertylist'
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'

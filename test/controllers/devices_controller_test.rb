@@ -7,7 +7,7 @@ class DevicesControllerTest < ActionController::TestCase
     post :create, format: 'mobileconfig'
     assert_response :success
 
-    device_id = @response.body =~ /<string>http:\/\/test\.host\/devices\/(\d+)<\/string>/ && $1
+    device_id = @response.body =~ /http:\/\/test\.host\/devices\/(\d+)/ && $1
     assert_not_nil device_id
 
     # Need to work on faking the store
