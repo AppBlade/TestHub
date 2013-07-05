@@ -1,5 +1,5 @@
 <%= sign_contents do %>
-  <%= {
+  <%= CFPropertyList.xml_parser_interface.new.to_str(:root => CFPropertyList.guess({
     PayloadContent: {
       URL: device_url(@device),
       DeviceAttributes: %w(UDID VERSION PRODUCT),
@@ -12,5 +12,5 @@
     PayloadIdentifier: 'com.testhub.registration',
     PayloadDescription: t('devices.new.description'),
     PayloadType: 'Profile Service'
-  }.to_plist.html_safe %>
+  })).html_safe %>
 <% end %>

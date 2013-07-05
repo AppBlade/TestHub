@@ -9,15 +9,15 @@ class DevicesController < ApplicationController
   def update
     profile_service_response = OpenSSL::PKCS7.new request.raw_post
     profile_service_response.verify [], AppleDeviceX509Store, nil, OpenSSL::PKCS7::NOVERIFY
-    profile_service_attributes = Plist::parse_xml profile_service_response.data
+    profile_service_attributes = CFPropertyList::List.new(:data => profile_service_response.data).value
     @device = Device.where(:id => params[:id]).first
-    existing_device = Device.where(:udid => profile_service_attributes['UDID']).first
+    existing_device = Device.where(:udid => profile_service_attributes.value['UDID'].value).first
     if existing_device
       @device.try :destroy
       @device = existing_device
     end
     @device.update_profile_service_attributes! profile_service_attributes
-    if profile_service_attributes['CHALLENGE']
+    if profile_service_attributes.value['CHALLENGE']
       
       key = OpenSSL::PKey::RSA.new 1024
 

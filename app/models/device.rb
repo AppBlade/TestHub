@@ -9,9 +9,9 @@ class Device < ActiveRecord::Base
   end
 
   def update_profile_service_attributes!(response_attributes)
-    self.product = response_attributes['PRODUCT']
-    self.udid    = response_attributes['UDID']
-    self.version = response_attributes['VERSION']
+    self.product = response_attributes.value['PRODUCT'].value
+    self.udid    = response_attributes.value['UDID'].value
+    self.version = response_attributes.value['VERSION'].value
     generate_secret
     save
   end

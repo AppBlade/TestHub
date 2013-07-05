@@ -34,7 +34,6 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'plist'
 gem 'rubyzip'
 gem 'CFPropertyList', :require => 'cfpropertylist'
 

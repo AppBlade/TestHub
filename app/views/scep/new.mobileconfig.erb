@@ -1,5 +1,5 @@
 <%= sign_contents do %>
-  <% {
+  <% CFPropertyList.xml_parser_interface.new.to_str(:root => CFPropertyList.guess({
     PayloadContent: [{
       PayloadContent: {
         Challenge: [@device.id, @device.secret].join(':'),
@@ -20,5 +20,5 @@
     PayloadUUID: SecureRandom.uuid,
     PayloadIdentifier: 'com.testhub.registration.phase-3',
     PayloadType: 'Configuration'
-  }.to_plist.html_safe -%>
+  })).html_safe -%>
 <% end -%>
