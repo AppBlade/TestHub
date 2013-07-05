@@ -15,7 +15,7 @@ class ScepController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def get_ca_caps
-    send_data "POSTPKIOperation\nSHA-1", :status => :ok, :content_type => 'text/plain'
+    send_data "POSTPKIOperation\nSHA-1", :content_type => 'text/plain'
   end
 
   def get_ca_cert
