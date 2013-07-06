@@ -40,5 +40,5 @@ en:
       no_payload: '"/Payload" does not exist'
       no_package: '"/Payload" does not contain a package'
       multiple_packages: '"/Payload" contains multiple packages'
-      no_codesign: Package has not been codesigned
-      missing_info_plist: Package is missing the Info.plist file
+      no_codesign: "%{package_name} has not been codesigned"
+      missing_info_plist: "%{package_name} is missing the Info.plist file"

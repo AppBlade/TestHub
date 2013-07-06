@@ -36,7 +36,7 @@ class Ipa
 
     end
 
-    @errors << I18n.t('ipa.errors.no_codesign') unless @zipfile.file.exists?(path('_CodeSignature/CodeResources'))
+    @errors << I18n.t('ipa.errors.no_codesign', :package_name => @package_name) unless @zipfile.file.exists?(path('_CodeSignature/CodeResources'))
 
     if @zipfile.file.exists?(path('Info.plist'))
 
@@ -55,7 +55,7 @@ class Ipa
 
     else
 
-      @errors << I18n.t('ipa.errors.missing_info_plist')
+      @errors << I18n.t('ipa.errors.missing_info_plist', :package_name => @package_name)
 
     end
 
