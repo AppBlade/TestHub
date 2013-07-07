@@ -10,4 +10,7 @@ TestHub::Application.routes.draw do
 
   root :to => 'pages#index'
 
+  post 'oauth/:client' => 'oauth#start',    as: :oauth_start
+  get  'oauth/:client' => 'oauth#callback', as: :oauth_callback
+
 end

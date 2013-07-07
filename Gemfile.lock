@@ -47,8 +47,11 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    faraday (0.8.7)
+      multipart-post (~> 1.1)
     fssm (0.2.10)
     hike (1.2.3)
+    httpauth (0.2.0)
     i18n (0.6.4)
     jbuilder (1.4.2)
       activesupport (>= 3.0.0)
@@ -57,12 +60,23 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.0)
+    jwt (0.1.8)
+      multi_json (>= 1.5)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.23)
     minitest (4.7.5)
     multi_json (1.7.7)
+    multi_xml (0.5.4)
+    multipart-post (1.2.0)
+    oauth2 (0.9.2)
+      faraday (~> 0.8)
+      httpauth (~> 0.2)
+      jwt (~> 0.1.4)
+      multi_json (~> 1.0)
+      multi_xml (~> 0.5)
+      rack (~> 1.2)
     pg (0.15.1)
     polyglot (0.3.3)
     rack (1.5.2)
@@ -128,6 +142,8 @@ DEPENDENCIES
   compass-rails
   jbuilder (~> 1.2)
   jquery-rails
+  multi_json
+  oauth2
   pg
   rails (= 4.0.0)
   rubyzip

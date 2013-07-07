@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130703023555) do
+ActiveRecord::Schema.define(version: 20130707114721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
+
+  create_table "access_tokens", force: true do |t|
+    t.string   "token"
+    t.string   "refresh_token"
+    t.datetime "expires_at"
+    t.hstore   "options"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "devices", force: true do |t|
     t.string   "udid",               limit: 40

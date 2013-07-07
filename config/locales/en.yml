@@ -28,6 +28,8 @@ en:
       menu: Menu
     device:
       registration: Register this device to enable downloads.
+    github:
+      registration: Register with GitHub.
   devices:
     scep:
       cn: TestHub Registration
