@@ -2,12 +2,12 @@ class OauthController < ApplicationController
 
   # POST /oauth/:client
   def start
-    redirect_to client.auth_code.authorize_url(redirect_uri: oauth_callback_url(client: 'github'), scope: 'repo')
+    redirect_to GithubClient.auth_code.authorize_url(redirect_uri: oauth_callback_url(client: 'github'), scope: 'repo')
   end
 
   # GET /oauth/:client
   def callback
-    access_token = client.auth_code.get_token(params[:code], redirect_uri: oauth_callback_url(client: 'github'))
+    access_token = GithubClient.auth_code.get_token(params[:code], redirect_uri: oauth_callback_url(client: 'github'))
     stored_access_token = AccessToken.where(token_digest: Digest::SHA1.hexdigest(access_token.token)).first_or_create
     user = stored_access_token.user || nil
     github_profile_request = access_token.get 'https://api.github.com/user', headers: {'If-None-Match' =>  user.try(:github_etag).to_s}
@@ -31,16 +31,6 @@ class OauthController < ApplicationController
       remember_current_user_session
     end
     redirect_to root_url
-  end
-
-private
-
-  def client
-    @client ||= OAuth2::Client.new ENV['GITHUB_TOKEN'], 
-                                   ENV['GITHUB_SECRET'],
-                                   site: 'https://github.com', 
-                                   authorize_url: '/login/oauth/authorize',
-                                   token_url: '/login/oauth/access_token'
   end
 
 end

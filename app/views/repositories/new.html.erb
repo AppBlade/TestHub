@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="large-12 columns">
+    <%= form_for :repositories, :url => :repositories do |f| %>
+      <% @repositories.select {|r| r['language'] == 'Objective-C' }.each do |repository| %>
+        <label>
+          <%= check_box_tag 'repository_full_names[]', repository['full_name'], false, :id => "repository_#{repository['id']}" %>
+          <h2><%= repository['name'] %></h2>
+          <p class="subtitle"><%= repository['full_name'] %></p>
+          <p><%= repository['description'] %></p>
+          <p><%= repository['language'] %></p>
+        </label>
+      <% end %>
+      <%= f.submit %>
+    <% end %>
+  </div>
+</div>

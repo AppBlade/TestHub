@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130707173946) do
+ActiveRecord::Schema.define(version: 20130707183650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,11 @@ ActiveRecord::Schema.define(version: 20130707173946) do
     t.string   "token_digest",  limit: 40
   end
 
+  create_table "collaborators", force: true do |t|
+    t.integer "user_id"
+    t.integer "repository_id"
+  end
+
   create_table "devices", force: true do |t|
     t.string   "udid",               limit: 40
     t.string   "product"
@@ -38,6 +43,17 @@ ActiveRecord::Schema.define(version: 20130707173946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "serial"
+  end
+
+  create_table "repositories", force: true do |t|
+    t.integer  "github_id"
+    t.integer  "owner_id"
+    t.string   "github_etag"
+    t.string   "name"
+    t.string   "full_name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_sessions", force: true do |t|

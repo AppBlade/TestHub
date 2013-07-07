@@ -1,8 +1,9 @@
 TestHub::Application.routes.draw do
 
-  resources :devices, :only => [:create] do
-    post '' => :update, on: :member, as: ''
-  end
+  resources :devices, :only => [:create]
+  post 'devices/:id' => 'devices#update'
+
+  resources :repositories, :only => [:new, :create]
 
   get  'scep' => 'scep#get_ca_caps', constraints: -> (request) { request.params['operation'] == 'GetCACaps' }
   get  'scep' => 'scep#get_ca_cert', constraints: -> (request) { request.params['operation'] == 'GetCACert' }
