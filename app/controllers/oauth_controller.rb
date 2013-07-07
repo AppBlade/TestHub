@@ -26,6 +26,10 @@ class OauthController < ApplicationController
                                           refresh_token: access_token.refresh_token && DatabaseKey.public_encrypt(access_token.refresh_token),
                                           options:       access_token.options,
                                           user:          user
+    if current_user_session.try(:user) != user
+      @current_user_session = user.user_sessions.create access_token: stored_access_token
+      remember_current_user_session
+    end
     redirect_to root_url
   end
 

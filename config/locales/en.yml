@@ -21,6 +21,7 @@
 
 en:
   global:
+    hello: Hello, %{name}
     app:
       name: TestHub
       slogan: Give your mobile applications wings

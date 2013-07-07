@@ -17,12 +17,18 @@
 
 <div class="row">
   <div class="large-12 columns">
-    <%= link_to t('global.github.registration'), oauth_start_path(client: 'github'), method: :post %>
+    <% if current_user %>
+      <%= t('global.hello', :name => current_user.first_name) %>;
+    <% else %>
+      <%= link_to t('global.github.registration'), oauth_start_path(client: 'github'), method: :post %>
+    <% end %>
+  </div>
+</div>
 
 <div class="row">
   <div class="large-12 columns">
     <% if current_device %>
-      <%= current_device.product %>
+      <%= Product.new current_device.product %>
       <%= Ios::Version.new current_device.version %>
       <%= current_device.udid %>
     <% else %>
