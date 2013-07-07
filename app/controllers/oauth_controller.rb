@@ -8,9 +8,9 @@ class OauthController < ApplicationController
   # GET /oauth/:client
   def callback
     access_token = client.auth_code.get_token(params[:code], redirect_uri: oauth_callback_url(client: 'github'))
-    stored_access_token = AccessToken.where(token: Base64.encode64(ServerKey.public_encrypt(access_token.token))).first_or_create
+    stored_access_token = AccessToken.where(token: DatabaseKey.public_encrypt(access_token.token)).first_or_create
     stored_access_token.update_attributes expires_at:    access_token.expires_at,
-                                          refresh_token: access_token.refresh_token && Base64.encode64(ServerKey.public_encrypt(access_token.refresh_token)),
+                                          refresh_token: access_token.refresh_token && DatabaseKey.public_encrypt(access_token.refresh_token),
                                           options:       access_token.options
     github_user_request = access_token.get 'https://api.github.com/user'
     Rails.logger.info MultiJson.load(github_user_request.response.body)

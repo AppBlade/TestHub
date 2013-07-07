@@ -12,3 +12,5 @@ ProfileServiceKey   = OpenSSL::PKey::RSA.new          File.read(File.join(Rails.
 ProfileServiceCert  = OpenSSL::X509::Certificate.new  File.read(File.join(Rails.root, 'lib/ssl/profile_service.crt'))
 ProfileServiceStore = OpenSSL::X509::Store.new
 ProfileServiceStore.add_cert ProfileServiceCert
+
+DatabaseKey = OpenSSL::PKey::RSA.new File.read(File.join(Rails.root, 'lib/ssl/database.key')), ENV['DATABASE_PHRASE']

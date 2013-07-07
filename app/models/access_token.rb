@@ -10,11 +10,11 @@ class AccessToken < ActiveRecord::Base
   end
 
   def decrypted_token
-    ServerKey.private_decrypt(Base64.decode64(token))
+    DatabaseKey.private_decrypt token
   end
 
   def decrypted_refresh_token
-    refresh_token && ServerKey.private_decrypt(Base64.decode64(refresh_token))
+    refresh_token && DatabaseKey.private_decrypt(refresh_token)
   end
 
 end

@@ -16,10 +16,11 @@ ActiveRecord::Schema.define(version: 20130707114721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "pgcrypto"
 
   create_table "access_tokens", force: true do |t|
-    t.string   "token"
-    t.string   "refresh_token"
+    t.binary   "token"
+    t.binary   "refresh_token"
     t.datetime "expires_at"
     t.hstore   "options"
     t.datetime "created_at"
