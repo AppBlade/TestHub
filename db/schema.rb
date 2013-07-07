@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130707114721) do
+ActiveRecord::Schema.define(version: 20130707134930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20130707114721) do
     t.hstore   "options"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "token_digest",  limit: 40
   end
 
   create_table "devices", force: true do |t|
@@ -33,6 +35,17 @@ ActiveRecord::Schema.define(version: 20130707114721) do
     t.string   "version"
     t.string   "secret_digest"
     t.string   "certificate_serial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.integer  "github_id"
+    t.string   "github_login"
+    t.string   "name"
+    t.string   "email"
+    t.string   "avatar_url"
+    t.string   "github_etag"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

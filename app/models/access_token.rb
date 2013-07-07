@@ -1,5 +1,9 @@
 class AccessToken < ActiveRecord::Base
 
+  belongs_to :user
+
+  validate :token, presence: true
+
   def to_oauth2(client)
     @to_oauth2 ||= OAuth2::AccessToken.new client,
                                            decrypted_token, 
