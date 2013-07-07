@@ -28,8 +28,8 @@
 <div class="row">
   <div class="large-12 columns">
     <% if current_device %>
-      <%= Product.new current_device.product %>
-      <%= Ios::Version.new current_device.version %>
+      <%= Product.new(current_device.product, current_device.serial).inspect %>
+      <%= Ios::Version.new(current_device.version).inspect %>
       <%= current_device.udid %>
     <% else %>
       <%= link_to t('global.device.registration'), devices_path(format: 'mobileconfig'), method: :post %>

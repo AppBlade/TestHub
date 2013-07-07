@@ -12,6 +12,7 @@ class Device < ActiveRecord::Base
     self.product = response_attributes.value['PRODUCT'].value
     self.udid    = response_attributes.value['UDID'].value
     self.version = response_attributes.value['VERSION'].value
+    self.serial  = response_attributes.value['SERIAL'].value
     generate_secret
     save
   end

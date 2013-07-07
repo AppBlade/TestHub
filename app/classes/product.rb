@@ -79,21 +79,26 @@ class Product
         '2,1' => ['2', 'armv6', %w(wifi accelerometer location-services gamekit microphone opengles-1 armv6 peer-peer)],
         '3,1' => ['3', 'armv7', %w(wifi accelerometer location-services gamekit microphone opengles-1 opengles-2 armv6 armv7 peer-peer)],
         '4,1' => ['4', 'armv7', %w(wifi still-camera front-facing-camera video-camera accelerometer gyroscope location-services gamekit microphone opengles-1 opengles-2 armv6 armv7 peer-peer)],
-        '5,1' => ['5', 'armv7', %w(wifi still-camera front-facing-camera video-camera accelerometer gyroscope location-services gamekit microphone opengles-1 opengles-2 armv6 armv7 peer-peer bluetooth-le)]
+        '5,1' => ['5', 'armv7', %w(wifi still-camera auto-focus-camera camera-flash front-facing-camera video-camera accelerometer gyroscope location-services gamekit microphone opengles-1 opengles-2 armv6 armv7 peer-peer bluetooth-le)],
+        'FCJ' => ['5', 'armv7', %w(wifi still-camera front-facing-camera video-camera accelerometer gyroscope location-services gamekit microphone opengles-1 opengles-2 armv6 armv7 peer-peer bluetooth-le)]
       }
     }
   }
 
   attr_reader :family, :model_number, :model, :cpu, :capabilities, :name
 
-  def initialize(product_name)
+  def initialize(product_name, serial = '')
     family, family_information = Products.select do |family|
       product_name =~ /^#{family}/
     end.first
     @family = family.to_s
-    @model_number, (@model, @cpu, @capabilities) = family_information[:models].select do |model_number|
+    model_match = family_information[:models].select do |model_number|
+      serial.last(3) == model_number
+    end.first
+    model_match ||= family_information[:models].select do |model_number|
       product_name == "#{family}#{model_number}"
     end.first
+    @model_number, (@model, @cpu, @capabilities) = model_match
     @name = "#{@family} #{@model}"
     puts family.inspect
     puts model.inspect

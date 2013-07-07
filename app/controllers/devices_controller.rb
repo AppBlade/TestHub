@@ -65,7 +65,7 @@ private
     {
       PayloadContent: {
         URL: device_url(@device),
-        DeviceAttributes: %w(UDID VERSION PRODUCT),
+        DeviceAttributes: %w(UDID VERSION PRODUCT SERIAL),
         Challenge: @device.secret
       },
       PayloadOrganization: t('devices.new.organization'),
