@@ -13,7 +13,7 @@ class DevicesController < ApplicationController
     profile_service_attributes = CFPropertyList::List.new(:data => profile_service_response.data).value
     @device = Device.where(:id => params[:id]).first
     existing_device = Device.where(:udid => profile_service_attributes.value['UDID'].value).first
-    if existing_device
+    if existing_device && existing_device != @device
       @device.try :destroy
       @device = existing_device
     end
