@@ -4,6 +4,9 @@ class Device < ActiveRecord::Base
 
   before_create :generate_secret
 
+  has_many :provisioned_devices, dependent: :destroy
+  has_many :bundles, through: :provisioned_devices
+
   def secret
     @secret ||= Password.new secret_digest
   end

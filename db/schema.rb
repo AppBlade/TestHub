@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130707183650) do
+ActiveRecord::Schema.define(version: 20130707200558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,29 @@ ActiveRecord::Schema.define(version: 20130707183650) do
     t.string   "token_digest",  limit: 40
   end
 
+  create_table "bundles", force: true do |t|
+    t.integer  "github_id"
+    t.integer  "release_id"
+    t.integer  "repository_id"
+    t.string   "url"
+    t.string   "minimum_os_version"
+    t.string   "bundle_display_name"
+    t.string   "bundle_version"
+    t.string   "github_etag"
+    t.string   "bundle_identifier"
+    t.boolean  "enterprise"
+    t.boolean  "ipad_only"
+    t.boolean  "armv6"
+    t.boolean  "armv7"
+    t.boolean  "armv7s"
+    t.string   "fatal_errors",        array: true
+    t.string   "md5",                 array: true
+    t.hstore   "capabilities"
+    t.datetime "expiration_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "collaborators", force: true do |t|
     t.integer "user_id"
     t.integer "repository_id"
@@ -43,6 +66,22 @@ ActiveRecord::Schema.define(version: 20130707183650) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "serial"
+  end
+
+  create_table "provisioned_devices", force: true do |t|
+    t.integer  "bundle_id"
+    t.integer  "device_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "releases", force: true do |t|
+    t.integer  "github_id"
+    t.integer  "repository_id"
+    t.string   "body"
+    t.string   "github_etag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "repositories", force: true do |t|

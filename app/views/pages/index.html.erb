@@ -26,6 +26,9 @@
           <% repository.users.each do |user| %>
             <%= image_tag user.avatar_url, :width => 32, :height => 32 %>
           <% end %>
+          <% repository.bundles.each do |bundle| %>
+            <p><%= bundle.url %></p>
+          <% end %>
         <% end %>
       </ul>
       <%= link_to t('global.github.track'), [:new, :repository] %>

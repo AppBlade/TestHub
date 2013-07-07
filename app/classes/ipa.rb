@@ -1,6 +1,6 @@
 class Ipa
 
-	attr_accessor :expiration_date, :enterprise, :devices, :minimum_os_version, :bundle_display_name, :bundle_version, :ipad_only, :icon_files, :largest_icon, :errors
+	attr_accessor :expiration_date, :capabilities, :bundle_identifier, :armv6, :armv7, :armv7s, :enterprise, :devices, :minimum_os_version, :bundle_display_name, :bundle_version, :ipad_only, :icon_files, :largest_icon, :errors
 
 	def initialize(ipa_path)
     @errors = []
@@ -42,10 +42,43 @@ class Ipa
 
       info_plist_data = CFPropertyList::List.new(:data => open('Info.plist').read).value
 
+      puts info_plist_data.inspect
+
+      executable_path          = info_plist_data.value['CFBundleExecutable'].value
       @minimum_os_version      = info_plist_data.value['MinimumOSVersion'].value
       @bundle_display_name     = info_plist_data.value['CFBundleDisplayName'].value
+      @bundle_identifier       = info_plist_data.value['CFBundleIdentifier'].value
       @bundle_version          = info_plist_data.value['CFBundleVersion'].value
-      @ipad_only               = Array(info_plist_data.value['UIDeviceFamily'].value).map(&:value).include?('1')
+      ui_device_family         = info_plist_data.value['UIDeviceFamily'].value
+      @ipad_only               = ui_device_family.nil? || Array(ui_device_family).map(&:value).include?('1')
+      ui_required_device_capabilities = info_plist_data.value['UIRequiredDeviceCapabilities']
+      if ui_required_device_capabilities.present?
+        if ui_required_device_capabilities.is_a? CFPropertyList::CFArray
+          @capabilities = ui_required_device_capabilities.value.map(&:value).inject({}) do |hash, key| 
+            hash.merge({key => true})
+          end
+        else
+          @capabilities = ui_required_device_capabilities.value.inject({}) do |hash, (key, value)|
+            hash.merge({key => value.value})
+          end
+        end
+      end
+
+      @armv6 = @armv7 = @armv7s = false
+
+      tempfile = Tempfile.new(executable_path)
+      @zipfile.extract(path(executable_path), tempfile.path) { true }
+      `otool -hl "#{tempfile.path}"`.split("#{tempfile.path}").reject(&:blank?).each do |architecture_result|
+      architecture = case architecture_result.match(/0xfeedface\s+12\s+(\d{1,2})/) && $1.to_i
+        when 6
+          @armv6 = true
+        when 9
+          @armv7 = true
+        when 11
+          @armv7s = true
+        end
+      end
+      tempfile.unlink
 
       @icon_files = []
       @icon_files << info_plist_data.value['CFBundleIconFile'].try(:value)

@@ -33,10 +33,31 @@ class RepositoriesController < ApplicationController
       releases_request = access_token.get "https://api.github.com/repos/#{repository_full_name}/releases"
       parsed_releases = MultiJson.load(releases_request.response.body)
       parsed_releases.each do |parsed_release|
+        release = repository.releases.where(github_id: parsed_release['id']).first_or_create
         release_assets_request = access_token.get parsed_release['assets_url']
+        release.update_attributes body:        parsed_release['body'],
+                                  github_etag: release_assets_request.response['ETag']
         parsed_release_assets = MultiJson.load(release_assets_request.response.body)
         parsed_release_assets.each do |parsed_release_asset|
-          Rails.logger.info parsed_release_asset['url'] if parsed_release_asset['name'] =~ /\.ipa$/
+          if parsed_release_asset['name'] =~ /\.ipa$/
+            bundle = release.bundles.where(github_id: parsed_release_asset['id']).first_or_create
+            bundle.update_attributes url: parsed_release_asset['url'],
+                                     repository: repository
+            ipa = Ipa.new("/Users/james/Desktop/#{parsed_release_asset['id']}.ipa")
+            bundle.update_attributes minimum_os_version:  ipa.minimum_os_version,
+                                     bundle_display_name: ipa.bundle_display_name,
+                                     bundle_version:      ipa.bundle_version,
+                                     bundle_identifier:   ipa.bundle_identifier,
+                                     enterprise:          ipa.enterprise,
+                                     ipad_only:           ipa.ipad_only,
+                                     armv6:  ipa.armv6,
+                                     armv7:  ipa.armv7,
+                                     armv7s: ipa.armv7s,
+                                     fatal_errors:    ipa.errors,
+                                     md5:             [],
+                                     capabilities:    ipa.capabilities,
+                                     expiration_date: ipa.expiration_date
+          end
         end
       end
     end
