@@ -50,13 +50,14 @@ en:
       missing_info_plist: "%{package_name} is missing the Info.plist file"
   bundle:
     errors:
-      armv7_thin_target_error: ARMV7 thin requires a minimum os greater than 4
+      armv7_thin_target_error: ARMv7-thin builds require a minimum os target of 4.0 or higher
       required_capabilities: requires %{missing_capabilities}
       forbidden_capabilities: forbids %{forbidden_capabilities}
       ipad_only: requires an iPad
       not_provisioned: is not provisioned
       minimum_os_not_met: requires iOS %w{minimum_operating_system}
       expired: provisioning profile has expired
+      capability_target_error: setting %{capability_target_errors} in UIRequiredDeviceCapabilities requires either an ARMv6/7 fat binary or minimum os target of 4.3 or higher
     capabilities:
       telephony: Phone.app
       wifi: the ability to connect to Wifi
