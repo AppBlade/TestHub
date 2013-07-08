@@ -21,6 +21,8 @@ class Bundle < ActiveRecord::Base
     errors
   end
 
+private
+
   def minimum_operating_system
     @minimum_operating_system ||= Ios::Version.new(nil, minimum_os_version)
   end
