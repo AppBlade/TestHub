@@ -3,6 +3,8 @@ TestHub
 
 TestHub is a tool built on top of [GitHub's releases feature](https://github.com/blog/1547-release-your-software) to enable over the air deployment of iPhone applications.
 
+**TestHub isn't ready for prime-time yet, I'm banking on updates to the GitHub API regarding Releases and am faking data in places.—[James Daniels](https://github.com/jamesdaniels)**
+
 Why would I use this over a plist?
 ----------------------------------
 1. TestHub exchanges information with the device to learn it's UDID automatically.
