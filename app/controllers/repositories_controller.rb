@@ -36,6 +36,8 @@ class RepositoriesController < ApplicationController
         release = repository.releases.where(github_id: parsed_release['id']).first_or_create
         release_assets_request = access_token.get parsed_release['assets_url']
         release.update_attributes body:        parsed_release['body'],
+                                  name:        parsed_release['name'],
+                                  tag_name:    parsed_release['tag_name'],
                                   github_etag: release_assets_request.response['ETag']
         parsed_release_assets = MultiJson.load(release_assets_request.response.body)
         parsed_release_assets.each do |parsed_release_asset|

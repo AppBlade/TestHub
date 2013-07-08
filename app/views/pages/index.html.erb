@@ -35,13 +35,19 @@
           <% repository.users.each do |user| %>
             <%= image_tag user.avatar_url, :width => 32, :height => 32 %>
           <% end %>
-          <% repository.bundles.each do |bundle| %>
-            <p><%= bundle.url %></p>
-            <% if current_device %>
-              <% if bundle.install_errors(current_device).empty? %>
-                <p><%= t('global.install') %></p>
+          <% repository.releases.each do |release| %>
+            <h3><%= release.tag_name %> <%= release.name %></h3>
+            <p><%= release.body %></p>
+            <% release.bundles.each do |bundle| %>
+              <h4><%= bundle.bundle_display_name %> <%= bundle.bundle_version %></h4>
+              <% if current_device %>
+                <% if bundle.install_errors(current_device).empty? %>
+                  <p><%= t('global.install') %></p>
+                <% else %>
+                  <p><%= bundle.install_errors(current_device).join('; ') %>.</p>
+                <% end %>
               <% else %>
-                <p><%= bundle.install_errors(current_device).join('; ') %>.</p>
+                <p><%= t 'global.unregistered' %></p>
               <% end %>
             <% end %>
           <% end %>
