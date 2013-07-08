@@ -8,12 +8,6 @@ class Bundle < ActiveRecord::Base
 
   def install_errors(device)
 		errors = []
-    # return ['Application has expired'] if expired?
-    # return ['Application is broken'] if needs_some_serious_love?
-    # if ipad_only? && !device.device_model.family != :iPad
-    #   errors << "Requires #{supported_devices.join(', ')} or newer model"
-    #   errors << "running iOS #{minimum_os_version} or higher" if minimum_os_version
-    # end
     missing_capabilities   = capabilities.select{|k,v| v }.keys - Array(device.model.capabilities)
     missing_capabilities.map! {|c| I18n.t("bundle.capabilities.#{c}")}
     forbidden_capabilities = Array(device.model.capabilities) & capabilities.reject{|k,v| v }.keys
