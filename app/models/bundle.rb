@@ -35,7 +35,7 @@ private
   end
 
   def armv7_thin_target_error?
-    armv7_thin? && minimum_os_version.to_i < 4
+    !armv6? && minimum_os_version.to_i < 4
   end
 
   def expired?
@@ -52,9 +52,6 @@ private
 
   def armv7s_thin?
     armv7s? && !armv7? && !armv6?
-  end
-
-  def capability_target_errors
   end
 
 end

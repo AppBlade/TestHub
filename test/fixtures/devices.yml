@@ -4,5 +4,31 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-james_iphone_5: {
-}
+james_iphone_5:
+  udid: ffffffec0abfa46bc38b8c8d0ff8952282c6cd30
+  product: iPhone5,1
+  version: 10B143
+  secret_digest: nil
+  certificate_serial: 53aac56ade0a4a0d1aa63edb12f914dc30bbdf87
+  serial: FFFFFFFFFTTN
+james_macbook:
+  udid: FFFFFFFF-5B30-5B8E-A1CB-F5C5288D932F
+  product: MacBookPro8,2
+  version: 12E55
+  secret_digest: nil
+  certificate_serial: 614a3592070dac6abccd84549f617cf6e62ad80f
+  serial: FFFFFFFFFF8Y
+james_itouch:
+  udid: ffffff8334e4b2d9e40188c0a04e734e2bdf7769
+  product: iPod5,1
+  version: 11A4400f
+  secret_digest: nil
+  certificate_serial: 1bca96ad850e423d750561bd6365db819d4d6910
+  serial: FFFFFFFFFFCJ
+james_ipad:
+  udid: 56f957a8184dab42214486575ece78bf204c9aa5
+  product: iPad3,2
+  version: 10B143
+  secret_digest: nil
+  certificate_serial: 1ffa96ad850e423d750561bd6365db9ffd4d6920
+  serial: FFFFFFFFFJ8T

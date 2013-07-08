@@ -55,7 +55,7 @@ en:
       forbidden_capabilities: forbids %{forbidden_capabilities}
       ipad_only: requires an iPad
       not_provisioned: is not provisioned
-      minimum_os_not_met: requires iOS %w{minimum_operating_system}
+      minimum_os_not_met: requires iOS %{minimum_operating_system}
       expired: provisioning profile has expired
       capability_target_error: setting %{capability_target_errors} in UIRequiredDeviceCapabilities requires either an ARMv6/7 fat binary or minimum os target of 4.3 or higher
     capabilities:

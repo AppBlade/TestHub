@@ -21,7 +21,7 @@ class Device < ActiveRecord::Base
   end
 
   def model
-    @device_model ||= Product.new product
+    @device_model ||= Product.new product, serial
   end
 
   def operating_system

@@ -1,0 +1,15 @@
+valid_enterprise:
+  github_id: 1
+  minimum_os_version: 4.3
+  bundle_display_name: Test
+  bundle_version: 1.0
+  bundle_identifier: com.test.a
+  enterprise: true
+  ipad_only: false
+  armv6: false
+  armv7: true
+  armv7s: true
+  fatal_errors: []
+  capabilities:
+    armv7: true
+  expiration_date: <%= 2.weeks.from_now %>
