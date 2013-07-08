@@ -31,7 +31,9 @@ en:
     device:
       registration: Register this device to enable downloads.
     github:
-      registration: Register with GitHub.
+      track: Track more repositories
+      track_save: Track the selected repositories
+      registration: Register with GitHub to add repositories.
   devices:
     scep:
       cn: TestHub Registration

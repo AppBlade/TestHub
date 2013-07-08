@@ -15,6 +15,15 @@
 
 <% end %>
 
+<% unless current_device %>
+  <div class="row">
+    <div class="large-12 columns">
+      <p><%= link_to t('global.device.registration'), devices_path(format: 'mobileconfig'), method: :post, class: 'button' %></p>
+      <hr>
+    </div>
+  </div>
+<% end %>
+
 <div class="row">
   <div class="large-12 columns">
     <% if current_user %>
@@ -38,21 +47,9 @@
           <% end %>
         <% end %>
       </ul>
-      <%= link_to t('global.github.track'), [:new, :repository] %>
+      <p><%= link_to t('global.github.track'), [:new, :repository], class: 'button' %></p>
     <% else %>
-      <%= link_to t('global.github.registration'), oauth_start_path(client: 'github'), method: :post %>
-    <% end %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="large-12 columns">
-    <% if current_device %>
-      <%= Product.new(current_device.product, current_device.serial).inspect %>
-      <%= Ios::Version.new(current_device.version).inspect %>
-      <%= current_device.udid %>
-    <% else %>
-      <%= link_to t('global.device.registration'), devices_path(format: 'mobileconfig'), method: :post %>
+      <p><%= link_to t('global.github.registration'), oauth_start_path(client: 'github'), method: :post, class: 'button' %></p>
     <% end %>
   </div>
 </div>

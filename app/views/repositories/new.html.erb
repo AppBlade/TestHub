@@ -1,6 +1,7 @@
 <div class="row">
   <div class="large-12 columns">
     <%= form_for :repositories, :url => :repositories do |f| %>
+      <h2>Objective-C</h2>
       <% @repositories.select {|r| r['language'] == 'Objective-C' }.each do |repository| %>
         <label>
           <%= check_box_tag 'repository_full_names[]', repository['full_name'], false, :id => "repository_#{repository['id']}" %>
@@ -10,7 +11,17 @@
           <p><%= repository['language'] %></p>
         </label>
       <% end %>
-      <%= f.submit %>
+      <h2>All others</h2>
+      <% @repositories.reject {|r| r['language'] == 'Objective-C' }.each do |repository| %>
+        <label>
+          <%= check_box_tag 'repository_full_names[]', repository['full_name'], false, :id => "repository_#{repository['id']}" %>
+          <h2><%= repository['name'] %></h2>
+          <p class="subtitle"><%= repository['full_name'] %></p>
+          <p><%= repository['description'] %></p>
+          <p><%= repository['language'] %></p>
+        </label>
+      <% end %>
+      <%= f.submit t('global.github.track_save'), class: 'button' %>
     <% end %>
   </div>
 </div>
