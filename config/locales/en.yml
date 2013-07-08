@@ -48,7 +48,7 @@ en:
       missing_info_plist: "%{package_name} is missing the Info.plist file"
   bundle:
     errors:
-      armv7_thin_minimum_os_issue: ARMV7 thin requires a minimum os greater than 4
+      armv7_thin_target_error: ARMV7 thin requires a minimum os greater than 4
       required_capabilities: requires %{missing_capabilities}
       forbidden_capabilities: forbids %{forbidden_capabilities}
       ipad_only: requires an iPad

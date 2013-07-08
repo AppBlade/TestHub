@@ -12,14 +12,17 @@ class Bundle < ActiveRecord::Base
     missing_capabilities   = I18n.t missing_capabilities, scope: 'bundle.capabilities'
     forbidden_capabilities = Array(device.model.capabilities) & capabilities.reject{|k,v| v }.keys
     forbidden_capabilities = I18n.t forbidden_capabilities, scope: 'bundle.capabilities'
-    errors << I18n.t('bundle.errors.expired') if expired?
-    errors << I18n.t('bundle.errors.armv7_thin_minimum_os_issue') if armv7_thin_minimum_os_issue?
-    errors << I18n.t('bundle.errors.required_capabilities', missing_capabilities: missing_capabilities.join(', ')) if missing_capabilities.any?
-    errors << I18n.t('bundle.errors.forbidden_capabilities', forbidden_capabilities: forbidden_capabilities.join(', ')) if forbidden_capabilities.any?
-    errors << I18n.t('bundle.errors.ipad_only') if ipad_only? && device.model.family != :iPad
-		errors << I18n.t('bundle.errors.not_provisioned') unless enterprise? || devices.include?(device)
-    errors << I18n.t('bundle.errors.minimum_os_not_met', minimum_operating_system: minimum_operating_system) if device.operating_system < minimum_operating_system
-    errors
+    errors << 'expired'                 if expired?
+    errors << 'armv7_thin_target_error' if armv7_thin_target_error?
+    errors << 'required_capabilities'   if missing_capabilities.any?
+    errors << 'forbidden_capabilities'  if forbidden_capabilities.any?
+    errors << 'ipad_only'               if ipad_only? && device.model.family != :iPad
+		errors << 'not_provisioned'         unless enterprise? || devices.include?(device)
+    errors << 'minimum_os_not_met'      if device.operating_system < minimum_operating_system
+    I18n.t errors, scope: 'bundle.errors',
+                   missing_capabilities: missing_capabilities.join(', '),
+                   forbidden_capabilities: forbidden_capabilities.join(', '),
+                   minimum_operating_system: minimum_operating_system
   end
 
 private
@@ -28,7 +31,7 @@ private
     @minimum_operating_system ||= Ios::Version.new(minimum_os_version)
   end
 
-  def armv7_thin_minimum_os_issue?
+  def armv7_thin_target_error?
     armv7_thin? && minimum_os_version.to_i < 4
   end
 
