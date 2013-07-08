@@ -84,7 +84,8 @@ class Ios::VersionTest < ActiveSupport::TestCase
     '10B329'   => '6.1.3',
     '10B350'   => '6.1.4',
     '11A4372q' => '7.0b1',
-    '11A4400f' => '7.0b2'
+    '11A4400f' => '7.0b2',
+    '11A4414e' => '7.0b3'
   }
 
   test 'test stringification of known versions' do
