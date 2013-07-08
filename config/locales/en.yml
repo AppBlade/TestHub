@@ -45,3 +45,33 @@ en:
       multiple_packages: '"/Payload" contains multiple packages'
       no_codesign: "%{package_name} has not been codesigned"
       missing_info_plist: "%{package_name} is missing the Info.plist file"
+  bundle:
+    errors:
+      armv7_thin_minimum_os_issue: ARMV7 thin requires a minimum os greater than 4
+      required_capabilities: requires %{missing_capabilities}
+      forbidden_capabilities: forbids %{forbidden_capabilities}
+      ipad_only: requires an iPad
+      not_provisioned: is not provisioned
+      minimum_os_not_met: requires iOS %w{minimum_operating_system}
+    capabilities:
+      telephony: Phone.app
+      wifi: the ability to connect to Wifi
+      sms: Messages.app
+      still-camera: the presence of a camera
+      auto-focus-camera: the presence of a camera with auto-focus capabilities
+      front-facing-camera: the presence of a front-facing camera
+      camera-flash: the presence of a camera flash
+      video-camera: the presence of a video camera
+      accelerometer: the presence of an accelerometer
+      gyroscope: the presence of a gyropscope
+      location-services: the ability to retrieve the device’s current location
+      gps: the presence of GPS hardware
+      magnetometer: the presence of a magnetometer
+      gamekit: Game Center
+      microphone: the presence of a microphone
+      opengles-1: an OpenGL ES 1.1 compatible device
+      opengles-2: an OpenGL ES 2.0 compatible device
+      armv6: an ARMv6-compatible device
+      armv7: an ARMv7-compatible device
+      peer-peer: peer-to-peer connectivity over Bluetooth
+      bluetooth-le: the presence of Bluetooth low-energy hardware

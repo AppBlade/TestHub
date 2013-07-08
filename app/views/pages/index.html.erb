@@ -32,7 +32,7 @@
               <% if bundle.install_errors(current_device).empty? %>
                 <p>Install</p>
               <% else %>
-                <p><%= bundle.install_errors(current_device).join(', ') %>.</p>
+                <p><%= bundle.install_errors(current_device).join('; ') %>.</p>
               <% end %>
             <% end %>
           <% end %>
