@@ -9,9 +9,10 @@ class Bundle < ActiveRecord::Base
   def install_errors(device)
 		errors = []
     missing_capabilities   = capabilities.select{|k,v| v }.keys - Array(device.model.capabilities)
-    missing_capabilities.map! {|c| I18n.t("bundle.capabilities.#{c}")}
+    missing_capabilities   = I18n.t missing_capabilities, scope: 'bundle.capabilities'
     forbidden_capabilities = Array(device.model.capabilities) & capabilities.reject{|k,v| v }.keys
-    forbidden_capabilities.map! {|c| I18n.t("bundle.capabilities.#{c}")}
+    forbidden_capabilities = I18n.t forbidden_capabilities, scope: 'bundle.capabilities'
+    errors << I18n.t('bundle.errors.expired') if expired?
     errors << I18n.t('bundle.errors.armv7_thin_minimum_os_issue') if armv7_thin_minimum_os_issue?
     errors << I18n.t('bundle.errors.required_capabilities', missing_capabilities: missing_capabilities.join(', ')) if missing_capabilities.any?
     errors << I18n.t('bundle.errors.forbidden_capabilities', forbidden_capabilities: forbidden_capabilities.join(', ')) if forbidden_capabilities.any?
@@ -24,7 +25,7 @@ class Bundle < ActiveRecord::Base
 private
 
   def minimum_operating_system
-    @minimum_operating_system ||= Ios::Version.new(nil, minimum_os_version)
+    @minimum_operating_system ||= Ios::Version.new(minimum_os_version)
   end
 
   def armv7_thin_minimum_os_issue?
@@ -32,7 +33,7 @@ private
   end
 
   def expired?
-		!!expiration_date && expiration_date <= Time.now
+		expiration_date.nil? || expiration_date <= Time.now
 	end
 
   def arm_flag_issue?

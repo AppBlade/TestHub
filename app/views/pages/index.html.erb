@@ -30,7 +30,7 @@
             <p><%= bundle.url %></p>
             <% if current_device %>
               <% if bundle.install_errors(current_device).empty? %>
-                <p>Install</p>
+                <p><%= t('global.install') %></p>
               <% else %>
                 <p><%= bundle.install_errors(current_device).join('; ') %>.</p>
               <% end %>

@@ -176,10 +176,9 @@ class Ios::Version
 
   attr_accessor :build, :major, :humanized_major, :minor, :humanized_minor, :patch, :humanized_patch, :beta, :humanized_beta
   
-  def initialize(build = nil, string_override = nil)
+  def initialize(build)
     @build = build
-    if build.nil?
-      string_override =~ /([1-9][0-9]*)\.([0-9]+)(?:\.([0-9]+))?/
+    if build =~ /([1-9][0-9]*)\.([0-9]+)(?:\.([0-9]+))?/
       @humanized_major, @humanized_minor, @humanized_patch = $1.to_i, $2.to_i, $3.to_i
       @is_beta = false
     else

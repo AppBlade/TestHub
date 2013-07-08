@@ -22,6 +22,7 @@
 en:
   global:
     hello: Hello, %{name}
+    install: Install
     app:
       name: TestHub
       slogan: Give your mobile applications wings
@@ -53,6 +54,7 @@ en:
       ipad_only: requires an iPad
       not_provisioned: is not provisioned
       minimum_os_not_met: requires iOS %w{minimum_operating_system}
+      expired: provisioning profile has expired
     capabilities:
       telephony: Phone.app
       wifi: the ability to connect to Wifi
