@@ -12,6 +12,12 @@ class BundleTest < ActiveSupport::TestCase
     assert bundle.install_errors(devices(:james_macbook)).any?
   end
 
+  test "an iOS7 beta device should be able to install an iOS 7 build" do
+    bundle = bundles(:valid_enterprise)
+    bundle.minimum_os_version = '7.0'
+    assert bundle.install_errors(devices(:james_itouch)).empty?
+  end
+
   test "that an expired IPA will have an error" do
     bundle = bundles(:valid_enterprise)
     bundle.expiration_date = 2.days.ago

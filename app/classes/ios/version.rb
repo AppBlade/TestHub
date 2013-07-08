@@ -180,7 +180,8 @@ class Ios::Version
     @build = build
     if build =~ /([1-9][0-9]*)\.([0-9]+)(?:\.([0-9]+))?/
       @humanized_major, @humanized_minor, @humanized_patch = $1.to_i, $2.to_i, $3.to_i
-      @is_beta = false
+      @is_beta = true
+      @humanized_beta = 0
     else
       build =~ /([1-9][0-9]*)([A-Z])(\d+)([a-z]*)/
       @major, @minor, @patch, @beta = $1.to_i, $2, $3.to_i, $4
@@ -200,7 +201,7 @@ class Ios::Version
   end
   
   def to_s
-    humanized_major && humanized_minor && "#{humanized_major}.#{humanized_minor}#{".#{humanized_patch}" if humanized_patch}#{"b#{humanized_beta}" if humanized_beta}".gsub(/\.0$/, '').gsub(/\.0b/, "b") || build
+    humanized_major && humanized_minor && "#{humanized_major}.#{humanized_minor}#{".#{humanized_patch}" if humanized_patch}#{"b#{humanized_beta}" if humanized_beta && humanized_beta > 0}".gsub(/\.0$/, '').gsub(/\.0b/, "b") || build
   end
   
   def <=>(other_version)
