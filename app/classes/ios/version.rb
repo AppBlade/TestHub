@@ -1,4 +1,6 @@
 class Ios::Version
+
+  include Comparable
   
   IOS = {
     '7' => [
@@ -174,22 +176,28 @@ class Ios::Version
 
   attr_accessor :build, :major, :humanized_major, :minor, :humanized_minor, :patch, :humanized_patch, :beta, :humanized_beta
   
-  def initialize(build)
+  def initialize(build = nil, string_override = nil)
     @build = build
-    build =~ /([1-9][0-9]*)([A-Z])(\d+)([a-z]*)/
-    @major, @minor, @patch, @beta = $1.to_i, $2, $3.to_i, $4
-    built_version = []
-    if IOS[major.to_s]
-      built_version << IOS[major.to_s][0]
-      built_version << (IOS[major.to_s][1][minor.to_s] && IOS[major.to_s][1][minor.to_s][0])
-      built_version << (IOS[major.to_s][1][minor.to_s] && IOS[major.to_s][1][minor.to_s][1] && IOS[major.to_s][1][minor.to_s][1]["#{patch}#{beta}"])
+    if build.nil?
+      string_override =~ /([1-9][0-9]*)\.([0-9]+)(?:\.([0-9]+))?/
+      @humanized_major, @humanized_minor, @humanized_patch = $1.to_i, $2.to_i, $3.to_i
+      @is_beta = false
+    else
+      build =~ /([1-9][0-9]*)([A-Z])(\d+)([a-z]*)/
+      @major, @minor, @patch, @beta = $1.to_i, $2, $3.to_i, $4
+      built_version = []
+      if IOS[major.to_s]
+        built_version << IOS[major.to_s][0]
+        built_version << (IOS[major.to_s][1][minor.to_s] && IOS[major.to_s][1][minor.to_s][0])
+        built_version << (IOS[major.to_s][1][minor.to_s] && IOS[major.to_s][1][minor.to_s][1] && IOS[major.to_s][1][minor.to_s][1]["#{patch}#{beta}"])
+      end
+      built_version.flatten!
+      @humanized_major, @humanized_minor, @humanized_patch, @humanized_beta = built_version
+      @is_beta ||= !@humanized_beta.nil?
+      @humanized_major ||= @guessed = true && major - 4
+      @humanized_minor ||= @guessed = true && minor.ord - 65
+      @humanized_patch ||= @guessed = true && 0
     end
-    built_version.flatten!
-    @humanized_major, @humanized_minor, @humanized_patch, @humanized_beta = built_version
-    @is_beta ||= !@humanized_beta.nil?
-    @humanized_major ||= @guessed = true && major - 4
-    @humanized_minor ||= @guessed = true && minor.ord - 65
-    @humanized_patch ||= @guessed = true && 0
   end
   
   def to_s

@@ -1,7 +1,7 @@
 TestHub::Application.routes.draw do
 
   resources :devices, :only => [:create]
-  post 'devices/:id' => 'devices#update'
+  post 'devices/:id' => 'devices#update', as: :device
 
   resources :repositories, :only => [:new, :create]
 

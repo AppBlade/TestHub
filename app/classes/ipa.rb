@@ -42,8 +42,6 @@ class Ipa
 
       info_plist_data = CFPropertyList::List.new(:data => open('Info.plist').read).value
 
-      puts info_plist_data.inspect
-
       executable_path          = info_plist_data.value['CFBundleExecutable'].value
       @minimum_os_version      = info_plist_data.value['MinimumOSVersion'].value
       @bundle_display_name     = info_plist_data.value['CFBundleDisplayName'].value

@@ -20,6 +20,14 @@ class Device < ActiveRecord::Base
     save
   end
 
+  def model
+    @device_model ||= Product.new product
+  end
+
+  def operating_system
+    @operating_system ||= Ios::Version.new version
+  end
+
 private
 
   def generate_secret

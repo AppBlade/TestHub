@@ -146,4 +146,16 @@ class Ios::VersionTest < ActiveSupport::TestCase
     end
   end
 
+  test 'test reverse translations' do
+    four_zero_one = Ios::Version.new(nil, '4.0.1')
+    assert_equal four_zero_one.humanized_major, 4, '4.0.1 major'
+    assert_equal four_zero_one.humanized_minor, 0, '4.0.1 minor'
+    assert_equal four_zero_one.humanized_patch, 1, '4.0.1 patch'
+    six_zero = Ios::Version.new(nil, '6.0')
+    assert_equal six_zero.humanized_major, 6, '6.0 major'
+    assert_equal six_zero.humanized_minor, 0, '6.0 minor'
+    assert_equal six_zero.humanized_patch, 0, '6.0 patch'
+    assert six_zero > four_zero_one
+  end
+
 end

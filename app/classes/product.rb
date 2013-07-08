@@ -100,8 +100,6 @@ class Product
     end.first
     @model_number, (@model, @cpu, @capabilities) = model_match
     @name = "#{@family} #{@model}"
-    puts family.inspect
-    puts model.inspect
   end
 
   def to_s

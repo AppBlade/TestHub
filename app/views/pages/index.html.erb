@@ -28,6 +28,13 @@
           <% end %>
           <% repository.bundles.each do |bundle| %>
             <p><%= bundle.url %></p>
+            <% if current_device %>
+              <% if bundle.install_errors(current_device).empty? %>
+                <p>Install</p>
+              <% else %>
+                <p><%= bundle.install_errors(current_device).join(', ') %>.</p>
+              <% end %>
+            <% end %>
           <% end %>
         <% end %>
       </ul>
