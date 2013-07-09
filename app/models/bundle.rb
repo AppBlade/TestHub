@@ -44,14 +44,6 @@ private
 		expiration_date.nil? || expiration_date <= Time.now
 	end
 
-  def arm_flag_issue?
-		armv7_thin? && minimum_os_version.to_i < 4
-	end
-
-  def armv7_thin?
-    !armv7s? && armv7? && !armv6?
-  end
-
   def armv7s_thin?
     armv7s? && !armv7? && !armv6?
   end
