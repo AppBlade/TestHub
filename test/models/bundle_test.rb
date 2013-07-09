@@ -40,7 +40,7 @@ class BundleTest < ActiveSupport::TestCase
     bundle = bundles(:valid_enterprise)
     bundle.capabilities['auto-focus-camera'] = true
     bundle.capabilities['camera-flash'] = true
-    assert_equal bundle.install_errors(devices(:james_itouch)), ["requires the presence of a camera with auto-focus capabilities, the presence of a camera flash"]
+    assert_equal bundle.install_errors(devices(:james_itouch)), ["requires the presence of a camera with auto-focus capabilities and the presence of a camera flash"]
   end
 
   test "that forbidden capabilities will cause failure" do

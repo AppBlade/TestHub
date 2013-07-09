@@ -41,10 +41,12 @@
             <% release.bundles.each do |bundle| %>
               <h4><%= bundle.bundle_display_name %> <%= bundle.bundle_version %></h4>
               <% if current_device %>
-                <% if bundle.install_errors(current_device).empty? %>
-                  <p><%= t('global.install') %></p>
-                <% else %>
-                  <p><%= bundle.install_errors(current_device).join('; ') %>.</p>
+                <% bundle.install_errors(current_device).tap do |install_errors| %>
+                  <% if install_errors.any? %>
+                    <%= sentenceficate bundle.install_errors(current_device) %>
+                  <% else %>
+                    <p><%= t('global.install') %></p>
+                  <% end %>
                 <% end %>
               <% else %>
                 <p><%= t 'global.unregistered' %></p>

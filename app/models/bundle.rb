@@ -22,10 +22,10 @@ class Bundle < ActiveRecord::Base
     errors << 'minimum_os_not_met'      if device.operating_system < minimum_operating_system
     errors << 'capability_target_error' if capability_target_errors.any?
     I18n.t errors, scope: 'bundle.errors',
-                   missing_capabilities: missing_capabilities.join(', '),
-                   forbidden_capabilities: forbidden_capabilities.join(', '),
+                   missing_capabilities: missing_capabilities.to_sentence,
+                   forbidden_capabilities: forbidden_capabilities.to_sentence,
                    minimum_operating_system: minimum_operating_system,
-                   capability_target_errors: capability_target_errors.join(', ')
+                   capability_target_errors: capability_target_errors.to_sentence
   end
 
 private

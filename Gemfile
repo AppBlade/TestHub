@@ -41,6 +41,7 @@ gem 'multi_json'
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
+gem 'simplecov', :require => false, :group => :test
 
 # Use unicorn as the app server
 # gem 'unicorn'
