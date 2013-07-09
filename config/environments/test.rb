@@ -33,4 +33,9 @@ TestHub::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  config.active_support.deprecation = Proc.new { |message, callstack|
+    raise NameError, message, callstack
+  }
+
 end

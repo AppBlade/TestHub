@@ -4,6 +4,13 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
+james_iphone_3g:
+  udid: ffffffec0ab4446bc38b8c8d0ff8952282c6cd30
+  product: iPhone1,2
+  version: 10B143
+  secret_digest: nil
+  certificate_serial: 5344c56ade0a4a0d1aa63edb12f914dc30bbdf87
+  serial: FFFFFFFFFTTN
 james_iphone_5:
   udid: ffffffec0abfa46bc38b8c8d0ff8952282c6cd30
   product: iPhone5,1

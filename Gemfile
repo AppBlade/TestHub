@@ -34,14 +34,23 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'rubyzip',        :require => 'zip/zipfilesystem'
-gem 'CFPropertyList', :require => 'cfpropertylist'
+gem 'rubyzip',        require: 'zip/zipfilesystem'
+gem 'CFPropertyList', require: 'cfpropertylist'
 gem 'oauth2'
 gem 'multi_json'
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
-gem 'simplecov', :require => false, :group => :test
+
+group :development do
+  gem 'guard'
+  gem 'guard-minitest'
+end
+
+group :test do
+  gem 'growl'
+  gem 'simplecov'
+end
 
 # Use unicorn as the app server
 # gem 'unicorn'

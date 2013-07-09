@@ -65,4 +65,14 @@ class BundleTest < ActiveSupport::TestCase
     end
   end
 
+  test "arm binary failures" do
+    bundle = bundles(:valid_enterprise)
+    bundle.armv6 = false
+    bundle.armv7 = true
+    bundle.armv7s = true
+    assert_equal bundle.install_errors(devices(:james_iphone_3g)), ['requires an ARMv7-compatible device']
+    bundle.armv7 = false
+    assert_equal bundle.install_errors(devices(:james_itouch)), ['requires an ARMv7s-compatible device']
+  end
+
 end

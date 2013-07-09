@@ -79,5 +79,6 @@ en:
       opengles-2: an OpenGL ES 2.0 compatible device
       armv6: an ARMv6-compatible device
       armv7: an ARMv7-compatible device
+      armv7s: an ARMv7s-compatible device
       peer-peer: peer-to-peer connectivity over Bluetooth
       bluetooth-le: the presence of Bluetooth low-energy hardware

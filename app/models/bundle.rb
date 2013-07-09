@@ -9,6 +9,8 @@ class Bundle < ActiveRecord::Base
   def install_errors(device)
 		errors = []
     missing_capabilities     = capabilities.select{|k,v| v }.keys - Array(device.model.capabilities)
+    missing_capabilities |= ['armv7']  if !armv6? && device.model.cpu == 'armv6'
+    missing_capabilities |= ['armv7s'] if armv7s_thin? && device.model.cpu != 'armv7s'
     missing_capabilities     = I18n.t missing_capabilities, scope: 'bundle.capabilities'
     forbidden_capabilities   = Array(device.model.capabilities) & capabilities.reject{|k,v| v }.keys
     forbidden_capabilities   = I18n.t forbidden_capabilities, scope: 'bundle.capabilities'
