@@ -43,4 +43,25 @@ class IpaTest < ActiveSupport::TestCase
     assert_equal ipa.errors, ['"/Payload" contains multiple packages']
   end
 
+  test 'missing Info.plist' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/noInfoPlist.ipa')
+    assert_equal ipa.errors, ["ShipBotTest.app is missing the Info.plist file"]
+  end
+
+  test 'Test IPA with compatibilities array' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/CapabiltiesArray.ipa')
+    assert ipa.capabilities['armv7']
+    assert ipa.capabilities['auto-focus-camera']
+  end
+
+  test 'Test IPA with compatibilities hash' do
+    ipa = Ipa.new File.join(Rails.root, 'test/bundles/CapabiltiesHashIpad.ipa')
+    assert ipa.capabilities['armv7']
+    assert !ipa.capabilities['camera']
+    assert ipa.ipad_only
+    assert ipa.armv7s
+    assert !ipa.armv7
+    assert !ipa.armv6
+  end
+
 end

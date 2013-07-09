@@ -48,7 +48,7 @@ class Ipa
       @bundle_identifier       = info_plist_data.value['CFBundleIdentifier'].value
       @bundle_version          = info_plist_data.value['CFBundleVersion'].value
       ui_device_family         = info_plist_data.value['UIDeviceFamily'].value
-      @ipad_only               = ui_device_family.nil? || Array(ui_device_family).map(&:value).include?('1')
+      @ipad_only               = !ui_device_family.nil? && !Array(ui_device_family).map(&:value).map(&:to_s).include?('1')
       ui_required_device_capabilities = info_plist_data.value['UIRequiredDeviceCapabilities']
       if ui_required_device_capabilities.present?
         if ui_required_device_capabilities.is_a? CFPropertyList::CFArray
@@ -98,10 +98,6 @@ class Ipa
 
   def open(file)
     @zipfile.file.open(path(file))
-  end
-	
-  def parsed_expiration_date
-		expiration_date && DateTime.parse(expiration_date) || nil
   end
 
 end
