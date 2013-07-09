@@ -42,9 +42,8 @@ class ScepController < ApplicationController
     message = OpenSSL::PKCS7.new raw_message
     message.verify nil, SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
 
-    sender_serial       = message.certificates.first.serial
-    sender_common_name  = message.certificates.first.subject.to_a.select{|(k,v)| k == 'CN'}.first[1]
-    recipient_key       = message.certificates.first.public_key
+    sender_serial = message.certificates.first.serial
+    recipient_key = message.certificates.first.public_key
 
     message_envelope = OpenSSL::PKCS7.new(message.data)
     x509_request = OpenSSL::X509::Request.new message_envelope.decrypt(SCEPKey, SCEPCert, nil)
@@ -55,7 +54,9 @@ class ScepController < ApplicationController
 
     device = Device.find(device_id)
 
-    raise ArgumentError unless device && (device.secret == challenge_password) && x509_request.verify(x509_request.public_key)
+    raise ArgumentError, 'No matching device' unless device
+    raise ArgumentError, 'Device secret doesnt match' unless device.secret == challenge_password
+    raise ArgumentError, 'X509 verification failed' unless x509_request.verify(x509_request.public_key)
 
     new_serial = Random.rand(2**(159))
 

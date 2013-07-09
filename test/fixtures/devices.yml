@@ -19,10 +19,11 @@ james_iphone_5:
   certificate_serial: 53aac56ade0a4a0d1aa63edb12f914dc30bbdf87
   serial: FFFFFFFFFTTN
 james_macbook:
+  id: 2
   udid: FFFFFFFF-5B30-5B8E-A1CB-F5C5288D932F
   product: MacBookPro8,2
   version: 12E55
-  secret_digest: nil
+  secret_digest: <%= BCrypt::Password.create 'cf31b62eca246c154b26286c9dec95ce6150ac6e19c041b6e9d166910ad38fe4' %>
   certificate_serial: 614a3592070dac6abccd84549f617cf6e62ad80f
   serial: FFFFFFFFFF8Y
 james_itouch:
