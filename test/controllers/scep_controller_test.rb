@@ -186,7 +186,7 @@ class ScepControllerTest < ActionController::TestCase
       ], 0, :CONTEXT_SPECIFIC)
     ])
 
-    post :pki_operation, pki_message.to_der.force_encoding('UTF-8'), content_type: 'application/octetstream'
+    post :pki_operation, pki_message.to_der.force_encoding('UTF-8'), content_type: 'application/x-pki-message'
 
     assert_response :success
 
