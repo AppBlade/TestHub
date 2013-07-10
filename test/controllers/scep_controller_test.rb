@@ -17,74 +17,176 @@ class ScepControllerTest < ActionController::TestCase
   end
   
   test 'certificate generation' do
-   
-    raw_message = Base64.decode64 <<DATA
-MIIKYAYJKoZIhvcNAQcCoIIKUTCCCk0CAQExCzAJBgUrDgMCGgUAMIIEzQYJ
-KoZIhvcNAQcBoIIEvgSCBLowggS2BgkqhkiG9w0BBwOgggSnMIIEowIBADGC
-ArswggK3AgEAMIGeMIGQMQswCQYDVQQGEwJVUzEWMBQGA1UECBMNTWFzc2Fj
-aHVzZXR0czEPMA0GA1UEBxMGQm9zdG9uMREwDwYDVQQKEwhSYWl6bGFiczER
-MA8GA1UECxMIQXBwQmxhZGUxEDAOBgNVBAMTB1Rlc3RIdWIxIDAeBgkqhkiG
-9w0BCQEWEWhlbHBAYXBwYmxhZGUuY29tAgkA5sStk4Dry9QwDQYJKoZIhvcN
-AQEBBQAEggIAbd+VeHDxv0yDYVDPMPSilR5F9bgdJq/wbYCDmrDHiB6eZWMi
-jq13ai5JyXNOkYFE4zyEYPKYTVt3g2gfs8lJ8n1YoY3jNFahVrnIr5XOAkuU
-FotLHp7DDEP48zrOHUNEWQJ4ZRpN/GZaRfqCe040btsFLnHUNO/so1Yi19Zf
-eavrFZ+0HlUB+JPODowsakis57KQkFkwUKP3mzblRk2mn1zO5QrtNBulYKfw
-Xzx9vaDZz4J1ldZYcISjEDWWWP+oDs8LHewGvZWIwluvCrvQbYKLq5nKI2dB
-AzAIsrK6XFkoxrhqeNYSyAubNQ+WCy1mAgBQDiNr9knT9RiU6g74FcorNBpY
-N8sRUZt1jCxODiUZh+X1fZD1W1m41jnMNBS8/1ldZOmaCItcPKWhndPy5Q2S
-eKnOgWmOdkDUsMhFTVKsg1rZl299v7LcVWVBNMC03SLBVQ8wQBfmaliVTFGp
-gH5aS+ZEm4+p00fc2Uxfv9Ch1EBVXGP+59clWsXxXNVjOrHHN5lXNM1SA4eu
-Ka+xVP2c1In9UWQ3sRnwgsTwe5H3as5vB9RHY5UvBaJpi2069nM7y22Kcm7R
-b3/wZ1evekUXiWGWufRKsM8AdhHme8El+nOrw09PktRWHjWTmbcZTBGNuhJW
-mZVqnTLIVkxT8Y3rEnvfljDQ1c0QpX2o+0UwggHdBgkqhkiG9w0BBwEwFAYI
-KoZIhvcNAwcECOYD5nxm4Ro+gIIBuFaFLuIM0Lsr75CfG6de15vVrrSGxPgS
-SE0Y6Z1EE3mR+P+gO9aey8Y5QvN1J1HkxCcaFWquhygmTKzkf+atRIEN4znk
-lUdNF00ybjRzWTnN+Unh+3/3CNdooR0+mvN03bWgk5ZddWDxBHnej2fgNhFO
-6oKT2Heuus7MnwYHDBqAo+vyd2ZzJd70lOi4bdlNAQt0jI76C0YHpBIN3cIB
-2KULteHjAbxVVHQYCSskTuWEIsytap0nfsGkrQSUtMuqqTcHZbHvsNBqLc/Y
-xK1LH4PEgRMhGMVKhczFWjvPHn29Z36KeZmCPjHtnRoBoqMQ1DfPwzZ1XTZ+
-/YTYTAkSAeFqZWbP22VLllvDIpmiviL2rfkPsMpKlppcskt/XqZ/mMUGzFU8
-M3IUJuaxZk7BFKjeJXYNwe8H5kksd0bvWBuh6SL1CCRsJis7h4QR+EW+1xOo
-R1gAWFrbgN5PZQrzcsYsf9owK2TS7ykYSF20hzbDlJwGuDcmSYBEoojcONC+
-duGDtIfdWVdgoJJfM0gFdJJp0k13+sju2TDVnIUUp1ndR4X0a0cX00vQyyGd
-w8b7/rqUepsKP/sNoIIC9TCCAvEwggHZoAMCAQICAQEwCwYJKoZIhvcNAQEL
-MCcxGDAWBgNVBAMMD01ETSBTQ0VQIFNJR05FUjELMAkGA1UEBhMCVVMwHhcN
-MTMwNzA5MjEzMzQ3WhcNMTQwNzA5MjEzMzQ3WjAnMRgwFgYDVQQDDA9NRE0g
-U0NFUCBTSUdORVIxCzAJBgNVBAYTAlVTMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAn8a//Du7pOYd5b9UtvozdoE933ma9bXX3ecTY9IoRrhB
-tRirsUz+mYs+LGMlXtdhQIfRmLDfctRR9OkQ6NZE6d4gSAL6clB7J+YLZrrZ
-BUn3GiSAG/bQBTIdhWNUujCwwFleGgKzmwLde/iGrqQUHzEkW1oukuCQdAev
-81N0ifxVZgyCVzEprC2x+RRGWVO1CZ4tH5Q8hk4U5OggBK+U3PH7d/zPnTLb
-CvuPG+hxOLoWLKTO/ymlSCNOSvlXAD65XP3p72tLRQVJ3UZJnPWxeqbFiG/S
-MO3Nfqryby+eyJnXtaSffRocGbqhfvsg3cs7YdjOTDh249FZfHajY3fIqQID
-AQABoyowKDAOBgNVHQ8BAf8EBAMCB4AwFgYDVR0lAQH/BAwwCgYIKwYBBQUH
-AwIwDQYJKoZIhvcNAQELBQADggEBAGVNlLfTmCQ69sfYnOjDq6fimet+HBnE
-6rq39PdLEy4ybKGuDWdMTFWVLU92GZcFKynbGLm9QK2QM6/3jKviFY6ew+Qa
-678w7QsRBLoIQN3DbQD8zqSUvG+6CYRBv7tDIIBwNffmrZZHifik4M/2yQjk
-roKzkKRTwqxMaR9/Llv22rESfvwMGt2EkRSE03UTFHuyp3dNroZaxe+kKo/D
-Md1KKKBNWuiN1dB/Vj0QuJyiWOe9WP+yDtV2xmk5s4H9GM/bMsL6FUbxfqLc
-7Xg26GQvlfIPD1tm/imWPaOnxjS2aprvkqebMY/sMWx1zasSPkcwp45KA4F4
-08HMRo5e/wAxggJvMIICawIBATAsMCcxGDAWBgNVBAMMD01ETSBTQ0VQIFNJ
-R05FUjELMAkGA1UEBhMCVVMCAQEwCQYFKw4DAhoFAKCCARgwEgYKYIZIAYb4
-RQEJAjEEEwIxOTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBgGCmCGSAGG
-+EUBCQUxCgQIk++ol1Tycz8wHAYJKoZIhvcNAQkFMQ8XDTEzMDcwOTIxMzM0
-N1owIwYJKoZIhvcNAQkEMRYEFJmrpHMb12VqLH6vJ6rTn6MJd0eoMDgGCmCG
-SAGG+EUBCQcxKhMoMjEzMTU3ODRGQTA1OUVCRERGNDlDNTIxM0QzMTJCMzFG
-NDYzQjA3RTBRBgkqhkiG9w0BCQcxRBNCMjpjZjMxYjYyZWNhMjQ2YzE1NGIy
-NjI4NmM5ZGVjOTVjZTYxNTBhYzZlMTljMDQxYjZlOWQxNjY5MTBhZDM4ZmU0
-MA0GCSqGSIb3DQEBAQUABIIBADTaHlhB3Iif9OssYtlOCd9zcXWwp41PPPOE
-pBxXsx8sjmI6InXEnd/EBwaAsFKDtQP9wV4Tnr6tYv/d/kmdEVWKfYBnQGOQ
-pcT54HBtaZPlK8Yp+hek9oOWgPTbNXSOGQOmYpOdl2RnFLCKoQeBp6UNQSM7
-RZ9CfRl4Ucqv66jfX/WlDiu1YhLwLFVL2xmPeW77eoToxSr6necwhF4uBXJb
-J22FZHWVvBo++BbCowEdNVI5MEq+YBn10gCWSpvqe+ri1TL/quDT4rLppGSK
-3vBlBA+kISv71f2ZZFQxGn7Jnc1wp1Xc3i6cVpfM6fpqb689giT5G0wZEvPE
-TxkwEAI=
-DATA
-
+    
     device = devices(:james_macbook)
-    pki_message = OpenSSL::PKCS7.new raw_message
 
-    post :pki_operation, raw_message.force_encoding('UTF-8'), content_type: 'application/octetstream'
+    key = OpenSSL::PKey::RSA.new 1024
+    
+    sha1 = OpenSSL::Digest::SHA1.new
+
+    cert = OpenSSL::X509::Certificate.new
+    cert.version = 2
+    cert.serial = Random.rand(2**(159))
+    cert.not_before = Time.now
+    cert.not_after = Time.now + 10.minutes
+    cert.public_key = key.public_key
+    cert.subject = OpenSSL::X509::Name.parse "CN=MDM SCEP SIGNER/C=US"
+    cert.issuer = OpenSSL::X509::Name.parse "CN=MDM SCEP SIGNER/C=US"
+    cert.sign key, OpenSSL::Digest::SHA1.new
+
+    csr_key = OpenSSL::PKey::RSA.new 1024
+    csr = OpenSSL::X509::Request.new
+    csr.public_key = csr_key.public_key
+    csr.subject = OpenSSL::X509::Name.parse "CN=iPhone/C=US"
+    csr.version = 0
+    csr.sign csr_key, sha1
+
+    now = Time.now
+    sender_nonce = SecureRandom.hex
+    transaction_id = SecureRandom.hex
+ 
+    des = OpenSSL::Cipher::Cipher.new("des-ede3-cbc")
+    des.encrypt
+    content_encryption_key = des.random_key
+    content_encryption_iv  = des.random_iv
+    des.key = content_encryption_key
+    des.iv  = content_encryption_iv
+
+    encrypted_payload = des.update(csr.to_der) + des.final
+
+    recipient_information = Sequence.new([
+      decode(SCEPCert.subject.to_der),
+      Integer.new(SCEPCert.serial.to_i)
+    ])
+
+    envelope = Sequence.new([
+      ObjectId.new('1.2.840.113549.1.7.3'),
+      ASN1Data.new([
+        Sequence.new([
+          Integer.new(0),
+          Set.new([
+            Sequence.new([
+              Integer.new(0),
+              recipient_information,
+              Sequence.new([
+                ObjectId.new('1.2.840.113549.1.1.1'),
+                Null.new(nil)
+              ]),
+              OctetString.new( SCEPKey.public_encrypt content_encryption_key )
+            ])
+          ]),
+          Sequence.new([
+            ObjectId.new('1.2.840.113549.1.7.1'),
+            Sequence.new([
+              ObjectId.new('1.2.840.113549.3.7'),
+              OctetString.new( content_encryption_iv )
+            ]),
+            ASN1Data.new( encrypted_payload, 0, :CONTEXT_SPECIFIC)
+          ])
+        ])
+      ], 0, :CONTEXT_SPECIFIC)
+    ])
+
+    text = envelope.to_der
+    message_digest = sha1.digest text
+
+    signed_attributes = ASN1Data.new([
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.3'),
+        Set.new([
+          ObjectId.new('1.2.840.113549.1.7.1')
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.5'),
+        Set.new([
+          UTCTime.new(now)
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.4'),
+        Set.new([
+          OctetString.new( message_digest ) 
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new( 'challengePassword' ),
+        Set.new([
+          PrintableString.new( "2:cf31b62eca246c154b26286c9dec95ce6150ac6e19c041b6e9d166910ad38fe4" )
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new( ScepController::MessageType ),
+        Set.new([
+          PrintableString.new( ScepController::MessageTypes['PKCSReq'].to_s )
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new( ScepController::SenderNonce ),
+        Set.new([
+          OctetString.new( [sender_nonce].pack('H*') )
+        ])
+      ]),
+      Sequence.new([
+        ObjectId.new( ScepController::TransId ),
+        Set.new([
+          PrintableString.new( transaction_id )
+        ])
+      ])
+    ], 0, :CONTEXT_SPECIFIC)
+
+    signed_attributes_digest = key.private_encrypt Sequence.new([
+      Sequence.new([
+        ObjectId.new('1.3.14.3.2.26'),
+        Null.new(nil)
+      ]),
+      OctetString.new( sha1.digest Set.new(signed_attributes.value[0..-1]).to_der )
+    ]).to_der
+
+    pki_message = Sequence.new([
+      ObjectId.new('1.2.840.113549.1.7.2'),
+      ASN1Data.new([
+        Sequence.new([
+          Integer.new(1),
+          Set.new([
+            Sequence.new([
+              ObjectId.new('1.3.14.3.2.26'),
+              Null.new(nil)
+            ])
+          ]),
+          Sequence.new([
+            ObjectId.new('1.2.840.113549.1.7.1'),
+            ASN1Data.new([
+              OctetString.new( text )
+            ], 0, :CONTEXT_SPECIFIC)
+          ]),
+          ASN1Data.new([
+            decode(cert.to_der)
+          ], 0, :CONTEXT_SPECIFIC),
+          Set.new([
+            Sequence.new([
+              Integer.new(1),
+              Sequence.new([ 
+                decode(cert.subject.to_der),
+                Integer.new( cert.serial )
+              ]),
+              Sequence.new([
+                ObjectId.new('1.3.14.3.2.26'),
+                Null.new(nil)
+              ]),
+              signed_attributes,
+              Sequence.new([
+                ObjectId.new('1.2.840.113549.1.1.1'),
+                Null.new(nil)
+              ]),
+              OctetString.new( signed_attributes_digest ) 
+            ])
+          ])
+        ])
+      ], 0, :CONTEXT_SPECIFIC)
+    ])
+
+    post :pki_operation, pki_message.to_der.force_encoding('UTF-8'), content_type: 'application/octetstream'
 
     assert_response :success
 
@@ -97,17 +199,11 @@ DATA
       hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
     end
 
-    message_type_id = signed_attributes[ScepController::MessageType]
-    transaction_id  = signed_attributes[ScepController::TransId]
-    pki_status      = signed_attributes[ScepController::PkiStatus]
-    sender_nonce    = signed_attributes[ScepController::SenderNonce].unpack('H*')[0]
-    recipient_nonce = signed_attributes[ScepController::RecipientNonce].unpack('H*')[0]
-    
-    assert_equal message_type_id, '3'
-    assert_equal transaction_id, '21315784FA059EBDDF49C5213D312B31F463B07E'
-    assert_equal pki_status, '0'
-    assert_equal recipient_nonce, '93efa89754f2733f'
-    assert       sender_nonce.present?
+    assert_equal signed_attributes[ScepController::MessageType], '3'
+    assert_equal signed_attributes[ScepController::TransId], transaction_id
+    assert_equal signed_attributes[ScepController::PkiStatus], '0'
+    assert_equal signed_attributes[ScepController::RecipientNonce].unpack('H*')[0], sender_nonce
+    assert       signed_attributes[ScepController::SenderNonce].present?
 
     assert message.certificates.nil?
     assert_equal message.recipients, []
@@ -117,15 +213,26 @@ DATA
 
     assert message.verify [SCEPCert], SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
 
-    message = OpenSSL::PKCS7.new message.data
+    envelope = decode message.data
 
-    assert message.certificates.nil?
-    assert_equal message.recipients.size, 1
-    assert message.recipients.first.enc_key.present?
-
-    assert_equal message.recipients.first.issuer.to_s, "/CN=MDM SCEP SIGNER/C=US"
-    assert_equal message.signers, []
+    content_encryption_key = key.private_decrypt envelope.value[1].value.first.value[1].value.first.value[3].value
+    content_encryption_iv  = envelope.value[1].value.first.value[2].value[1].value[1].value
     
+    des = OpenSSL::Cipher::Cipher.new("des-ede3-cbc")
+    des.decrypt
+    des.key = content_encryption_key
+    des.iv  = content_encryption_iv
+    
+    degenerate = des.update(envelope.value[1].value.first.value[2].value[2].value) + des.final
+
+    degenerate = OpenSSL::PKCS7.new degenerate
+    assert_equal degenerate.certificates.size, 1
+    assert_equal degenerate.recipients, []
+    assert_equal degenerate.signers, []
+
+    new_cert = degenerate.certificates.first
+    assert new_cert.check_private_key(csr_key)
+
   end
 
 end
