@@ -1,5 +1,7 @@
 class ScepController < ApplicationController
 
+  include OpenSSL::ASN1
+
   MessageType    = "2.16.840.1.113733.1.9.2"
   PkiStatus      = "2.16.840.1.113733.1.9.3"
   FailInfo       = "2.16.840.1.113733.1.9.4"
@@ -26,7 +28,7 @@ class ScepController < ApplicationController
 
     raw_message = request.raw_post
 
-    asn1 = OpenSSL::ASN1.decode raw_message
+    asn1 = decode raw_message
     raw_signed_attributes = asn1.value[1].value.first.value[4].first.value[3].value
     signed_attributes = raw_signed_attributes.inject({}) do |hash, raw_signed_attribute|
       hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
@@ -34,7 +36,7 @@ class ScepController < ApplicationController
 
     message_type_id = signed_attributes[MessageType]
     transaction_id  = signed_attributes[TransId]
-    sender_nonce    = signed_attributes[SenderNonce].unpack('H*')[0].upcase
+    sender_nonce    = signed_attributes[SenderNonce].unpack('H*')[0]
 
     message = OpenSSL::PKCS7.new raw_message
     message.verify nil, SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
@@ -77,22 +79,22 @@ class ScepController < ApplicationController
     device.certificate_serial = new_serial.to_s(16)
     device.save!
 
-    degenerate = OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.2'),
-      OpenSSL::ASN1::ASN1Data.new([
-        OpenSSL::ASN1::Sequence.new([
-          OpenSSL::ASN1::Integer.new(1),
-          OpenSSL::ASN1::Set.new([
+    degenerate = Sequence.new([
+      ObjectId.new('1.2.840.113549.1.7.2'),
+      ASN1Data.new([
+        Sequence.new([
+          Integer.new(1),
+          Set.new([
           ]),
-          OpenSSL::ASN1::Sequence.new([
-            OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.1')
+          Sequence.new([
+            ObjectId.new('1.2.840.113549.1.7.1')
           ]),
-          OpenSSL::ASN1::ASN1Data.new([
-            OpenSSL::ASN1.decode(new_cert.to_der)
+          ASN1Data.new([
+            decode(new_cert.to_der)
           ], 0, :CONTEXT_SPECIFIC),
-          OpenSSL::ASN1::ASN1Data.new([
+          ASN1Data.new([
           ], 1, :CONTEXT_SPECIFIC),
-          OpenSSL::ASN1::Set.new([
+          Set.new([
           ])
         ])
       ], 0, :CONTEXT_SPECIFIC)
@@ -109,34 +111,34 @@ class ScepController < ApplicationController
 
     encrypted_payload = des.update(degenerate.to_der) + des.final
 
-    recipient_information = OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1.decode(message.certificates.first.subject.to_der),
-      OpenSSL::ASN1::Integer.new(sender_serial.to_i)
+    recipient_information = Sequence.new([
+      decode(message.certificates.first.subject.to_der),
+      Integer.new(sender_serial.to_i)
     ])
 
-    envelope = OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.3'),
-      OpenSSL::ASN1::ASN1Data.new([
-        OpenSSL::ASN1::Sequence.new([
-          OpenSSL::ASN1::Integer.new(0),
-          OpenSSL::ASN1::Set.new([
-            OpenSSL::ASN1::Sequence.new([
-              OpenSSL::ASN1::Integer.new(0),
+    envelope = Sequence.new([
+      ObjectId.new('1.2.840.113549.1.7.3'),
+      ASN1Data.new([
+        Sequence.new([
+          Integer.new(0),
+          Set.new([
+            Sequence.new([
+              Integer.new(0),
               recipient_information,
-              OpenSSL::ASN1::Sequence.new([
-                OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.1.1'),
-                OpenSSL::ASN1::Null.new(nil)
+              Sequence.new([
+                ObjectId.new('1.2.840.113549.1.1.1'),
+                Null.new(nil)
               ]),
-              OpenSSL::ASN1::OctetString.new( recipient_key.public_encrypt content_encryption_key )
+              OctetString.new( recipient_key.public_encrypt content_encryption_key )
             ])
           ]),
-          OpenSSL::ASN1::Sequence.new([
-            OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.1'),
-            OpenSSL::ASN1::Sequence.new([
-              OpenSSL::ASN1::ObjectId.new('1.2.840.113549.3.7'),
-              OpenSSL::ASN1::OctetString.new( content_encryption_iv )
+          Sequence.new([
+            ObjectId.new('1.2.840.113549.1.7.1'),
+            Sequence.new([
+              ObjectId.new('1.2.840.113549.3.7'),
+              OctetString.new( content_encryption_iv )
             ]),
-            OpenSSL::ASN1::ASN1Data.new( encrypted_payload, 0, :CONTEXT_SPECIFIC)
+            ASN1Data.new( encrypted_payload, 0, :CONTEXT_SPECIFIC)
           ])
         ])
       ], 0, :CONTEXT_SPECIFIC)
@@ -146,98 +148,98 @@ class ScepController < ApplicationController
     message_digest = sha1.digest text
     now = Time.now
 
-    signed_attributes = OpenSSL::ASN1::ASN1Data.new([
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.9.3'),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.1')
+    signed_attributes = ASN1Data.new([
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.3'),
+        Set.new([
+          ObjectId.new('1.2.840.113549.1.7.1')
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.9.5'),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::UTCTime.new(now)
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.5'),
+        Set.new([
+          UTCTime.new(now)
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.9.4'),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::OctetString.new( message_digest )
+      Sequence.new([
+        ObjectId.new('1.2.840.113549.1.9.4'),
+        Set.new([
+          OctetString.new( message_digest )
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new( MessageType ),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::PrintableString.new( MessageTypes['CertRep'].to_s )
+      Sequence.new([
+        ObjectId.new( MessageType ),
+        Set.new([
+          PrintableString.new( MessageTypes['CertRep'].to_s )
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new( PkiStatus ),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::PrintableString.new( PkiStatuses['SUCCESS'].to_s )
+      Sequence.new([
+        ObjectId.new( PkiStatus ),
+        Set.new([
+          PrintableString.new( PkiStatuses['SUCCESS'].to_s )
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new(RecipientNonce),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::OctetString.new( [sender_nonce].pack('H*') )
+      Sequence.new([
+        ObjectId.new(RecipientNonce),
+        Set.new([
+          OctetString.new( [sender_nonce].pack('H*') )
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new(SenderNonce),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::OctetString.new( [SecureRandom.hex].pack('H*') )
+      Sequence.new([
+        ObjectId.new(SenderNonce),
+        Set.new([
+          OctetString.new( [SecureRandom.hex].pack('H*') )
         ])
       ]),
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new( TransId ),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::PrintableString.new( transaction_id )
+      Sequence.new([
+        ObjectId.new( TransId ),
+        Set.new([
+          PrintableString.new( transaction_id )
         ])
       ])
     ], 0, :CONTEXT_SPECIFIC)
 
-    signed_attributes_digest = SCEPKey.private_encrypt OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new('1.3.14.3.2.26'),
-        OpenSSL::ASN1::Null.new(nil)
+    signed_attributes_digest = SCEPKey.private_encrypt Sequence.new([
+      Sequence.new([
+        ObjectId.new('1.3.14.3.2.26'),
+        Null.new(nil)
       ]),
-      OpenSSL::ASN1::OctetString.new( sha1.digest OpenSSL::ASN1::Set.new(signed_attributes.value[0..-1]).to_der )
+      OctetString.new( sha1.digest Set.new(signed_attributes.value[0..-1]).to_der )
     ]).to_der
 
-    pki_message = OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.2'),
-      OpenSSL::ASN1::ASN1Data.new([OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::Integer.new(1), 
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::Sequence.new([ 
-            OpenSSL::ASN1::ObjectId.new('1.3.14.3.2.26'), 
-            OpenSSL::ASN1::Null.new(nil)
+    pki_message = Sequence.new([
+      ObjectId.new('1.2.840.113549.1.7.2'),
+      ASN1Data.new([Sequence.new([
+        Integer.new(1), 
+        Set.new([
+          Sequence.new([ 
+            ObjectId.new('1.3.14.3.2.26'), 
+            Null.new(nil)
           ])
         ]),
-        OpenSSL::ASN1::Sequence.new([
-          OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.7.1'),
-          OpenSSL::ASN1::ASN1Data.new([
-            OpenSSL::ASN1::OctetString.new( text )
+        Sequence.new([
+          ObjectId.new('1.2.840.113549.1.7.1'),
+          ASN1Data.new([
+            OctetString.new( text )
           ], 0, :CONTEXT_SPECIFIC)
         ]),
-        OpenSSL::ASN1::Set.new([
-          OpenSSL::ASN1::Sequence.new([
-            OpenSSL::ASN1::Integer.new(1),
-            OpenSSL::ASN1::Sequence.new([
-              OpenSSL::ASN1.decode(SCEPCert.subject.to_der),
-              OpenSSL::ASN1::Integer.new( SCEPCert.serial )
+        Set.new([
+          Sequence.new([
+            Integer.new(1),
+            Sequence.new([
+              decode(SCEPCert.subject.to_der),
+              Integer.new( SCEPCert.serial )
             ]),
-            OpenSSL::ASN1::Sequence.new([
-              OpenSSL::ASN1::ObjectId.new('1.3.14.3.2.26'),
-              OpenSSL::ASN1::Null.new(nil)
+            Sequence.new([
+              ObjectId.new('1.3.14.3.2.26'),
+              Null.new(nil)
             ]),
             signed_attributes,
-            OpenSSL::ASN1::Sequence.new([
-              OpenSSL::ASN1::ObjectId.new('1.2.840.113549.1.1.1'),
-              OpenSSL::ASN1::Null.new(nil)
+            Sequence.new([
+              ObjectId.new('1.2.840.113549.1.1.1'),
+              Null.new(nil)
             ]),
-            OpenSSL::ASN1::OctetString.new( signed_attributes_digest )
+            OctetString.new( signed_attributes_digest )
           ]),
         ])
       ])

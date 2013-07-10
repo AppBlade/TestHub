@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ScepControllerTest < ActionController::TestCase
+  
+  include OpenSSL::ASN1
 
   test 'CACaps' do
     get :get_ca_caps
@@ -89,7 +91,7 @@ DATA
     raw_message = @response.body
     message = OpenSSL::PKCS7.new raw_message
 
-    asn1 = OpenSSL::ASN1.decode raw_message
+    asn1 = decode raw_message
     raw_signed_attributes = asn1.value[1].value.first.value[3].first.value[3].value
     signed_attributes = raw_signed_attributes.inject({}) do |hash, raw_signed_attribute|
       hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
@@ -98,13 +100,13 @@ DATA
     message_type_id = signed_attributes[ScepController::MessageType]
     transaction_id  = signed_attributes[ScepController::TransId]
     pki_status      = signed_attributes[ScepController::PkiStatus]
-    sender_nonce    = signed_attributes[ScepController::SenderNonce].unpack('H*')[0].upcase
-    recipient_nonce = signed_attributes[ScepController::RecipientNonce].unpack('H*')[0].upcase
+    sender_nonce    = signed_attributes[ScepController::SenderNonce].unpack('H*')[0]
+    recipient_nonce = signed_attributes[ScepController::RecipientNonce].unpack('H*')[0]
     
     assert_equal message_type_id, '3'
     assert_equal transaction_id, '21315784FA059EBDDF49C5213D312B31F463B07E'
     assert_equal pki_status, '0'
-    assert_equal recipient_nonce, '93EFA89754F2733F'
+    assert_equal recipient_nonce, '93efa89754f2733f'
     assert       sender_nonce.present?
 
     assert message.certificates.nil?
