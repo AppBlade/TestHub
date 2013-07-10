@@ -26,18 +26,15 @@ class ScepController < ApplicationController
 
     raw_message = request.raw_post
 
-    temp = Tempfile.new SecureRandom.hex
-    temp.binmode
-    temp.write raw_message
-    temp.close
+    asn1 = OpenSSL::ASN1.decode raw_message
+    raw_signed_attributes = asn1.value[1].value.first.value[4].first.value[3].value
+    signed_attributes = raw_signed_attributes.inject({}) do |hash, raw_signed_attribute|
+      hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
+    end
 
-    asn1parse = `openssl asn1parse -in #{temp.path} -inform DER`
-
-    message_type_id = asn1parse.match(/OBJECT\s+:#{MessageType}\n.+\n.+PRINTABLESTRING\s+:(.+)/)[1].to_i
-    transaction_id  = asn1parse.match(/OBJECT\s+:#{TransId    }\n.+\n.+PRINTABLESTRING\s+:(.+)/)[1]
-    sender_nonce    = asn1parse.match(/OBJECT\s+:#{SenderNonce}\n.+\n.+OCTET STRING\s+\[HEX DUMP\]:(.+)/)[1]
-
-    temp.unlink
+    message_type_id = signed_attributes[MessageType]
+    transaction_id  = signed_attributes[TransId]
+    sender_nonce    = signed_attributes[SenderNonce].unpack('H*')[0].upcase
 
     message = OpenSSL::PKCS7.new raw_message
     message.verify nil, SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
@@ -48,9 +45,7 @@ class ScepController < ApplicationController
     message_envelope = OpenSSL::PKCS7.new(message.data)
     x509_request = OpenSSL::X509::Request.new message_envelope.decrypt(SCEPKey, SCEPCert, nil)
 
-    challenge_password = x509_request.attributes.select{|a| a.oid == 'challengePassword' }.first
-    challenge_password = challenge_password && challenge_password.value.value.first.value
-    device_id, challenge_password = challenge_password.split(':')
+    device_id, challenge_password = signed_attributes['challengePassword'].split(':')
 
     device = Device.find(device_id)
 

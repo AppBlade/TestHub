@@ -86,20 +86,20 @@ DATA
 
     assert_response :success
 
-    message = OpenSSL::PKCS7.new @response.body
+    raw_message = @response.body
+    message = OpenSSL::PKCS7.new raw_message
 
-    temp = Tempfile.new SecureRandom.hex
-    temp.binmode
-    temp.write message.to_der
-    temp.close
-    asn1parse = `openssl asn1parse -in #{temp.path} -inform DER`
-    temp.unlink
-    
-    message_type_id = asn1parse.match(/OBJECT\s+:#{ScepController::MessageType   }\n.+\n.+PRINTABLESTRING\s+:(.+)/)[1]
-    transaction_id  = asn1parse.match(/OBJECT\s+:#{ScepController::TransId       }\n.+\n.+PRINTABLESTRING\s+:(.+)/)[1]
-    pki_status      = asn1parse.match(/OBJECT\s+:#{ScepController::PkiStatus     }\n.+\n.+PRINTABLESTRING\s+:(.+)/)[1]
-    sender_nonce    = asn1parse.match(/OBJECT\s+:#{ScepController::SenderNonce   }\n.+\n.+OCTET STRING\s+\[HEX DUMP\]:(.+)/)[1]
-    recipient_nonce = asn1parse.match(/OBJECT\s+:#{ScepController::RecipientNonce}\n.+\n.+OCTET STRING\s+\[HEX DUMP\]:(.+)/)[1]
+    asn1 = OpenSSL::ASN1.decode raw_message
+    raw_signed_attributes = asn1.value[1].value.first.value[3].first.value[3].value
+    signed_attributes = raw_signed_attributes.inject({}) do |hash, raw_signed_attribute|
+      hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
+    end
+
+    message_type_id = signed_attributes[ScepController::MessageType]
+    transaction_id  = signed_attributes[ScepController::TransId]
+    pki_status      = signed_attributes[ScepController::PkiStatus]
+    sender_nonce    = signed_attributes[ScepController::SenderNonce].unpack('H*')[0].upcase
+    recipient_nonce = signed_attributes[ScepController::RecipientNonce].unpack('H*')[0].upcase
     
     assert_equal message_type_id, '3'
     assert_equal transaction_id, '21315784FA059EBDDF49C5213D312B31F463B07E'
