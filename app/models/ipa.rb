@@ -64,19 +64,13 @@ class Ipa
 
       @armv6 = @armv7 = @armv7s = false
 
-      tempfile = Tempfile.new(executable_path)
-      @zipfile.extract(path(executable_path), tempfile.path) { true }
-      `otool -hl "#{tempfile.path}"`.split("#{tempfile.path}").reject(&:blank?).each do |architecture_result|
-      architecture = case architecture_result.match(/0xfeedface\s+12\s+(\d{1,2})/) && $1.to_i
-        when 6
-          @armv6 = true
-        when 9
-          @armv7 = true
-        when 11
-          @armv7s = true
+      open(executable_path).read.bytes.join(' ').scan /206 250 237 254 (\d+) \d+ \d+ \d+ (\d+) \d+ \d+ \d+/ do |(cpu_type, cpu_subtype)|
+        if cpu_type == '12'
+          @armv6  ||= cpu_subtype == '6'
+          @armv7  ||= cpu_subtype == '9'
+          @armv7s ||= cpu_subtype == '11'
         end
       end
-      tempfile.unlink
 
       @icon_files = []
       @icon_files << info_plist_data.value['CFBundleIconFile'].try(:value)

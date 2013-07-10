@@ -13,6 +13,9 @@ class IpaTest < ActiveSupport::TestCase
     assert       !ipa.ipad_only
     assert_equal ipa.icon_files, %w(icon.png Icon-72.png)
     assert_equal ipa.errors, []
+    assert       ipa.armv6
+    assert       ipa.armv7
+    assert       !ipa.armv7s
   end
 
   test 'Test IPA' do
@@ -26,6 +29,9 @@ class IpaTest < ActiveSupport::TestCase
     assert       !ipa.ipad_only
     assert_equal ipa.icon_files, %w(Icon.png)
     assert_equal ipa.errors, []
+    assert       ipa.armv6
+    assert       ipa.armv7
+    assert       !ipa.armv7s
   end
 
   test 'No payload' do
