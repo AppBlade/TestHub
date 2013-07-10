@@ -40,7 +40,7 @@ gem 'oauth2'
 gem 'multi_json'
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
+gem 'bcrypt-ruby', '~> 3.1.0', :require => 'bcrypt'
 
 group :development do
   gem 'guard'
