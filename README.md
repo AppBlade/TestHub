@@ -1,4 +1,4 @@
-TestHub
+TestHub [![Build Status](https://travis-ci.org/AppBlade/TestHub.png?branch=master)](https://travis-ci.org/AppBlade/TestHub) [![Code Climate](https://codeclimate.com/repos/51dcf9c089af7e351300b93b/badges/96be53d56627cf87fef4/gpa.png)](https://codeclimate.com/repos/51dcf9c089af7e351300b93b/feed) [![Dependency Status](https://gemnasium.com/AppBlade/TestHub.png)](https://gemnasium.com/AppBlade/TestHub)
 =======
 
 TestHub is a tool built on top of [GitHub's releases feature](https://github.com/blog/1547-release-your-software) to enable over-the-air deployment of iPhone applications and automatically detect if the app can be installed on the phone.
