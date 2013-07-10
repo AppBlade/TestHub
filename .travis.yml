@@ -1,2 +1,5 @@
 rvm:
   - 2.0.0-p247
+before_script:
+  - rake setup:travis
+  - psql -c 'create database test_hub_test;' -U postgres
