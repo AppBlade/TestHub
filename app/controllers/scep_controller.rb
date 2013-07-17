@@ -45,9 +45,9 @@ class ScepController < ApplicationController
     recipient_key = message.certificates.first.public_key
 
     message_envelope = OpenSSL::PKCS7.new(message.data)
+    
     x509_request = OpenSSL::X509::Request.new message_envelope.decrypt(SCEPKey, SCEPCert, nil)
-
-    device_id, challenge_password = signed_attributes['challengePassword'].split(':')
+    device_id, challenge_password = x509_request.attributes.select{|a| a.oid == 'challengePassword' }.first.value.value.first.value.split(':')
 
     device = Device.find(device_id)
 

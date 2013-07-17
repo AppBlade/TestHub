@@ -39,6 +39,14 @@ class ScepControllerTest < ActionController::TestCase
     csr.public_key = csr_key.public_key
     csr.subject = OpenSSL::X509::Name.parse "CN=iPhone/C=US"
     csr.version = 0
+    csr.attributes = [
+      OpenSSL::X509::Attribute.new(
+        'challengePassword',
+        Set.new([
+          PrintableString.new( "2:cf31b62eca246c154b26286c9dec95ce6150ac6e19c041b6e9d166910ad38fe4" )
+        ])
+      )
+    ]
     csr.sign csr_key, sha1
 
     now = Time.now
