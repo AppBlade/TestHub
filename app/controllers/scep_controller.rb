@@ -41,7 +41,9 @@ class ScepController < ApplicationController
     transaction_id  = signed_attributes[TransId]
     sender_nonce    = signed_attributes[SenderNonce].unpack('H*')[0]
 
-    # Skip the verification this bit is self signed anyway
+    # Skip the verification, this bit is self signed anyway
+    # Security is provided by encrypting the inner envelope with the CACaps and
+    # verification before giving out the challengePassword in devices_controller
     message = OpenSSL::PKCS7.new raw_message
     message.verify nil, SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
 
