@@ -78,3 +78,4 @@ AppleDeviceX509Store = OpenSSL::X509::Store.new
 AppleDeviceX509Store.add_cert AppleRootCA
 AppleDeviceX509Store.add_cert AppleIPhoneCA
 AppleDeviceX509Store.add_cert AppleIPhoneDeviceCA
+AppleDeviceX509Store.add_cert ProfileServiceCert

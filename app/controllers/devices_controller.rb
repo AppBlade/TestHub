@@ -9,9 +9,7 @@ class DevicesController < ApplicationController
 
   def update
     profile_service_response = OpenSSL::PKCS7.new request.raw_post
-    # TODO: add a fake AppleStore in test so I can turn verification on here
-    # this is an attack vector against the SCEP implementation
-    profile_service_response.verify [], AppleDeviceX509Store, nil, OpenSSL::PKCS7::NOVERIFY
+    profile_service_response.verify profile_service_response.certificates, AppleDeviceX509Store, nil, OpenSSL::PKCS7::NOINTERN | OpenSSL::PKCS7::NOCHAIN
     profile_service_attributes = CFPropertyList::List.new(:data => profile_service_response.data).value
     @device = Device.where(:id => params[:id]).first
     existing_device = Device.where(:udid => profile_service_attributes.value['UDID'].value).first
