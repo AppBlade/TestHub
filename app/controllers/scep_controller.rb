@@ -28,16 +28,20 @@ class ScepController < ApplicationController
 
     raw_message = request.raw_post
 
+    # Ruby's PKCS7 doesn't have the ability to grab signed attributes
+    # so I'm parsing the ASN1 structure manually
     asn1 = decode raw_message
     raw_signed_attributes = asn1.value[1].value.first.value[4].first.value[3].value
     signed_attributes = raw_signed_attributes.inject({}) do |hash, raw_signed_attribute|
       hash.merge({raw_signed_attribute.value.first.value => raw_signed_attribute.value.last.value.first.value})
     end
 
+    # Grab the relevant signed attributes to complete the transaction
     message_type_id = signed_attributes[MessageType]
     transaction_id  = signed_attributes[TransId]
     sender_nonce    = signed_attributes[SenderNonce].unpack('H*')[0]
 
+    # Skip the verification this bit is self signed anyway
     message = OpenSSL::PKCS7.new raw_message
     message.verify nil, SCEPStore, nil, OpenSSL::PKCS7::NOVERIFY
 
@@ -46,17 +50,20 @@ class ScepController < ApplicationController
 
     message_envelope = OpenSSL::PKCS7.new(message.data)
     
+    # Decrypt the inner envelope, parse it as a CSR, and pull the challenge out
     x509_request = OpenSSL::X509::Request.new message_envelope.decrypt(SCEPKey, SCEPCert, nil)
     device_id, challenge_password = x509_request.attributes.select{|a| a.oid == 'challengePassword' }.first.value.value.first.value.split(':')
 
     device = Device.find(device_id)
 
+    # Errors, if I cared more I'd actually use SCEP failures rather than raise a 500
     raise ArgumentError, 'No matching device' unless device
     raise ArgumentError, 'Device secret doesnt match' unless device.secret == challenge_password
     raise ArgumentError, 'X509 verification failed' unless x509_request.verify(x509_request.public_key)
 
     new_serial = Random.rand(2**(159))
 
+    # Sign the CSR
     new_cert = OpenSSL::X509::Certificate.new
     new_cert.serial = new_serial
     new_cert.version = 2
@@ -75,10 +82,12 @@ class ScepController < ApplicationController
 
     new_cert.sign SCEPKey, OpenSSL::Digest::SHA1.new
 
+    # Save the serial to the database
     device.secret_digest = nil
     device.certificate_serial = new_serial.to_s(16)
     device.save!
 
+    # Form the PKCS7 degenerate, needed to transmit the certificate
     degenerate = Sequence.new([
       ObjectId.new('1.2.840.113549.1.7.2'),
       ASN1Data.new([
@@ -116,6 +125,7 @@ class ScepController < ApplicationController
       Integer.new(sender_serial.to_i)
     ])
 
+    # Wrap the degenerate in an envelope
     envelope = Sequence.new([
       ObjectId.new('1.2.840.113549.1.7.3'),
       ASN1Data.new([
@@ -148,6 +158,7 @@ class ScepController < ApplicationController
     message_digest = sha1.digest text
     now = Time.now
 
+    # Form the signed-attributes for SCEP
     signed_attributes = ASN1Data.new([
       Sequence.new([
         ObjectId.new('1.2.840.113549.1.9.3'),
@@ -207,6 +218,7 @@ class ScepController < ApplicationController
       OctetString.new( sha1.digest Set.new(signed_attributes.value[0..-1]).to_der )
     ]).to_der
 
+    # Wrap in a PKI message
     pki_message = Sequence.new([
       ObjectId.new('1.2.840.113549.1.7.2'),
       ASN1Data.new([Sequence.new([
