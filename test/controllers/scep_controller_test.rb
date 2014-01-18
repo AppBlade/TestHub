@@ -17,8 +17,6 @@ class ScepControllerTest < ActionController::TestCase
   end
   
   test 'certificate generation' do
-    
-    device = devices(:james_macbook)
 
     key = OpenSSL::PKey::RSA.new 1024
     
